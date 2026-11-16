@@ -1,0 +1,25 @@
+design,n,estimator,GMV relative loss,Frobenius loss / p
+neutral: S&P 500 covariance,100,Ledoit-Wolf linear,1.1148453632384725,2.0175060389825235
+neutral: S&P 500 covariance,100,Ledoit-Wolf nonlinear,0.8260400286901414,1.5899720235298875
+neutral: S&P 500 covariance,100,"oracle: same eigenvectors, best eigenvalues",0.799800759217832,1.3233334451415282
+neutral: S&P 500 covariance,100,sample covariance,1.6746706990070792,2.1153261295401764
+neutral: S&P 500 covariance,400,Ledoit-Wolf linear,0.6010896642400748,0.5266891385396082
+neutral: S&P 500 covariance,400,Ledoit-Wolf nonlinear,0.4081999508724311,0.490723841429793
+neutral: S&P 500 covariance,400,"oracle: same eigenvectors, best eigenvalues",0.39607182553565634,0.40154590920287925
+neutral: S&P 500 covariance,400,sample covariance,1.0343955347240141,0.5506940524488735
+one-factor market,100,Ledoit-Wolf linear,0.9723968564939829,26.127397262662896
+one-factor market,100,Ledoit-Wolf nonlinear,0.6100912745771256,15.689256066141748
+one-factor market,100,"oracle: same eigenvectors, best eigenvalues",0.5860305947828581,12.274488932429431
+one-factor market,100,sample covariance,2.723410129608484,26.761745133873454
+one-factor market,400,Ledoit-Wolf linear,0.7481587244475711,6.4327544869084665
+one-factor market,400,Ledoit-Wolf nonlinear,0.18310664306796506,4.563838051055733
+one-factor market,400,"oracle: same eigenvectors, best eigenvalues",0.1806326793473101,3.3847059343610857
+one-factor market,400,sample covariance,0.9973919704435129,7.048429159814058
+paper's bounded design,100,Ledoit-Wolf linear,0.27780202257079323,7.883748362721777
+paper's bounded design,100,Ledoit-Wolf nonlinear,0.2843565181904258,8.336020636062276
+paper's bounded design,100,"oracle: same eigenvectors, best eigenvalues",0.27555055570588677,7.715383966151819
+paper's bounded design,100,sample covariance,4.680389722008002,96.47636305699571
+paper's bounded design,400,Ledoit-Wolf linear,0.22635002101381882,6.294624435625183
+paper's bounded design,400,Ledoit-Wolf nonlinear,0.21378588998278927,6.065785897098864
+paper's bounded design,400,"oracle: same eigenvectors, best eigenvalues",0.2098605183257011,5.880794992286243
+paper's bounded design,400,sample covariance,1.0097656705493985,24.2450194909181

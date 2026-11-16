@@ -75,11 +75,12 @@ python study2_simulations.py run normal unbounded
 python study2_simulations.py run t5 unbounded
 python study2_simulations.py plot
 python study3_sp500.py                         # ~5 min
-python study5_ridge_multitarget.py validate    # ~5 s
-python study5_ridge_multitarget.py sim         # ~3 min
-python study5_ridge_multitarget.py sp500 54 200    # ~6 min (parallel)
-python study5_ridge_multitarget.py sp500 150 50    # ~10 min
+python study5_ridge_multitarget.py validate    # ~15 s
+python study5_ridge_multitarget.py sim         # ~5 min
+python study5_ridge_multitarget.py sp500 54 200    # ~10 min (parallel)
+python study5_ridge_multitarget.py sp500 150 100   # ~15 min
 python study5_ridge_multitarget.py plot
+python tests/test_study5.py                   # ~1 s
 ```
 
 Every study writes a table (`results/studyN.csv`), an overview figure (`results/studyN.png`), and one-chart
@@ -187,70 +188,141 @@ by (4.1). We added the equal-weight portfolio and counted, portfolio by portfoli
 
 ![Study 3: the paper's Figures 15 and 16, with equal weights added](results/study3.png)
 
-## Study 5 — Our extension: a ridge base and several targets
-**Why:** Studies 1 and 3 show where the paper's estimator breaks. For c > 1 its intensity is biased because S⁺
-does not behave like S*; near c = 1 the sample GMV portfolio is so noisy that 1/N beats the mixture. Both
-problems sit in the *base* portfolio, not in the idea of shrinking to a target. The paper also leaves the
-choice of target open (Section 2.4) and only tries 1/N.
+## Study 5 — Our extension, compared fairly: a ridge base and several targets
+**Why:** Studies 1 and 3 locate the paper's weak point in the *base* portfolio: S⁺ biases the intensity for
+c > 1, and near c = 1 the sample GMV portfolio is so noisy that 1/N beats the mixture. The paper also leaves the
+choice of target open (Section 2.4). A fair test of any fix must give every estimator the same data and must
+include the strongest available rivals.
 
-**What we did:** we replace the base S⁻¹1/1'S⁻¹1 (or S⁺) by the ridge GMV portfolio
-w_η = (S+ηI)⁻¹1 / 1'(S+ηI)⁻¹1 and mix it with several targets at once:
-w = w_η + Σ_k β_k (b_k − w_η), with b = 1/N and inverse-variance weights. η and β minimise the out-of-sample
-variance, which we estimate from the data only. With the deterministic equivalent (S+ηI)⁻¹ ≍ (xΣ+ηI)⁻¹,
-x = 1 − c + cη·m, m = tr(S+ηI)⁻¹/p (the same random-matrix tool the paper uses in its proofs), and A = (S+ηI)⁻¹:
+**What is new, and what is not.** The ridge GMV portfolio w_η = (S+ηI)⁻¹1 / 1'(S+ηI)⁻¹1 shrunk towards the
+single target 1/N, with η chosen by a random-matrix estimate of the out-of-sample variance, is the method of
+Bodnar, Parolya and Thorsén (2024, JMLR); we call it **BPT 2024** and treat it as a rival. Our addition is
+**several targets at once**, w = w_η + Σ_k β_k (b_k − w_η) with b = (1/N, inverse-variance weights), with η and
+all β_k chosen by the random-matrix estimate (`common.ridge_terms`, `ridge_choose`), and this comparison on these
+data. With the deterministic equivalent (S+ηI)⁻¹ ≍ (xΣ+ηI)⁻¹, x = 1 − c + cη·m, m = tr(S+ηI)⁻¹/p, A = (S+ηI)⁻¹:
+1'AΣb ≈ (1 − η·1'Ab)/x; 1'AΣA1 ≈ (1'A1 − η·1'A²1) / D / (1 − c(1 − 2ηm + η²q₂)), with a₂ = tr A²/p,
+x' = cm − cηa₂, D = 1 − c + cη²a₂, q₂ = (x·a₂ − x'm)/D; b_k'Σb_j ≈ b_k'S b_j. The best β for each η solves a K×K
+system; η comes from a fixed grid of 41 values. With one target and η → 0 the estimator is the paper's (2.26)
+(tested, `tests/test_study5.py`).
 
-- 1'AΣb ≈ (1 − η·1'Ab) / x
-- 1'AΣA1 ≈ (1'A1 − η·1'A²1) / D / (1 − c(1 − 2ηm + η²q₂)), with a₂ = tr A²/p, x' = cm − cηa₂,
-  D = 1 − c + cη²a₂, q₂ = (x·a₂ − x'm)/D
-- b_k'Σb_j ≈ b_k'S b_j
+**What we did:**
+1. *Checks of the machinery* (`validate`). (a) The variance estimate of w_η against the truth over the η grid,
+   three designs, c = 0.5 and 2, 100 samples. (b) The inverse-variance target built *inside* the estimation
+   window, which breaks the independence the theory assumes: the bias of its terms and the true loss of the
+   result, for a target from the whole window, from its first half, and from an independent earlier sample;
+   p = 54 and 150, c = 0.5–2, 60 samples, three designs. (c) Our implementation of the analytical nonlinear
+   shrinkage of Ledoit and Wolf (2020, Annals of Statistics 48(5), "Analytical nonlinear shrinkage of
+   large-dimensional covariance matrices") against its oracle (the sample eigenvectors with the best
+   eigenvalues u_i'Σu_i).
+2. *Two information regimes*, on the same portfolios and the same evaluation days:
+   - **same window**: every estimator sees only the last n days: 1/N, inverse variance, the paper's estimator,
+     Ledoit-Wolf linear and nonlinear GMV, BPT 2024, and ours with the inverse-variance target from the first
+     half of the window (the version chosen in simulation, see below);
+   - **same history**: every estimator may use the last n + 120 days: Ledoit-Wolf linear and nonlinear on
+     n + 120 days, inverse variance on n + 120 days, the paper's estimator with the inverse-variance target from
+     the 120 earlier days, and ours with that target; the n-day estimators are kept for reference.
 
-Every term is a sample quantity, for c < 1 and c > 1 alike, so no pseudo-inverse is needed. Given these, the
-best β for each η solves a K×K linear system, and we pick η from a grid of 41 values. As η → 0 with c < 1 and
-one target, this is exactly the paper's estimator; the intermediate step, several targets with the paper's
-S⁻¹/S⁺ base, is reported too. The inverse-variance target is estimated on data *before* the estimation window
-(120 days, or an independent sample in simulations), since the theory needs a target independent of the window.
-Code: `ridge_terms`, `ridge_multi_target`, `multi_target` in `common.py`; `study5_ridge_multitarget.py`.
+   Each estimator reads the data through an accessor that fails if it reads more rows than its regime allows
+   or any row at or after day t; a test checks that the weights for day t do not change when every later row
+   is replaced by NaN.
+3. *Simulation*, p = 200, 100 samples per cell, normal and t₅ returns, c = 0.5, 0.9, 1.5, 3, in three designs
+   with equal weight: **neutral**, Σ = the sample covariance of 200 random S&P 500 stocks over 2013–2018
+   (condition number 1300, invertible without shrinkage); the paper's bounded design; our one-factor market.
+   Each sample has n + 120 observations; same-window estimators see the last n. Paired tests over samples:
+   the geometric mean of loss ratios and the t-statistic of the mean log ratio.
+4. *S&P 500, 2013–2018*: 470 stocks with a full history; 200 random portfolios of p = 54 (evaluation
+   January 2014 – February 2018, 1030 days) and 100 of p = 150 (October 2014 – February 2018, 838 days); one
+   evaluation period for every c, regime and estimator. For each comparison: the ratio of the average
+   out-of-sample variance, ours / rival, with a 95% moving-block bootstrap interval over days (blocks of 10
+   days, 1000 resamples), and the Newey-West t-statistic of the day-by-day difference in squared deviations
+   averaged over portfolios; both make the inference over time, the only independent dimension. Also: the
+   two halves of the period, turnover against the drifted weights of the day before, and the variance of
+   returns net of proportional costs of 5 and 10 basis points. Block length, the 120 days and the η grid were
+   fixed before any evaluation; nothing was tuned on the evaluation data.
 
-We checked the estimate first, then compared seven estimators: in simulation (p = 200, 100 samples, c up to 3;
-the paper's bounded design and a one-factor market with betas U(0.5, 1.5) and idiosyncratic variances U(1, 4),
-normal and t₅ returns), and on the 2013–2018 S&P 500 sample (470 stocks with a full history; random portfolios
-of p = 54 (200 of them) and p = 150 (50); one common out-of-sample period for every c, 1030 and 838 days).
-Significance is tested over time, the only independent dimension: the day-by-day difference in squared
-deviations, averaged over portfolios, with Newey-West errors.
+**What it showed — the machinery:**
+- At a fixed η the variance estimate is close to the truth: the average bias over the grid lies between −5%
+  and +10% in all three designs, for c = 0.5 and c = 2.
+- **At the η and β it selects, the estimate is optimistic**, by 11–90% at p = 54 and up to 50% at p = 150 even
+  with an independent target: the minimum of a noisy curve is biased downwards. The estimated loss must not be
+  read as the loss one will get; we report only realised losses.
+- **A target built inside the window biases b'Sb downwards by up to 13% at p = 54** (up to 8% at p = 150),
+  against at most ±5% for an independent target. Taking the target from the first half of the window does not
+  remove this bias (up to 12%), but gives a 2% lower true loss on average than the whole window, so it is the
+  version we use. A second fix (the target's variance terms from the second half only) makes the linear system
+  inconsistent and fails.
+- **In simulation the in-window target beats BPT 2024 only in the market design at p = 150**: the true loss of
+  ours / BPT is 0.95–1.16 in the neutral design and 1.08–1.17 in the paper's design at p = 54, 0.99–1.21 in the
+  market design at p = 54, and 0.78–0.92 in the market design at p = 150. An independent target gives 0.61–1.14.
+- Our nonlinear shrinkage is within 1–4% of its oracle in GMV loss (neutral design, n = 400: 0.408 against
+  0.396; market, n = 400: 0.183 against 0.181). With few observations and p/n near 1 it is unstable: on the
+  S&P 500 at p = 54, c = 0.9 (n = 60) its turnover is 0.90 per day, against 0.26 for the linear version.
 
-**What it showed:**
-- **The variance estimate is right, also for c > 1.** Averaged over samples it lies within 3–8% of the true
-  out-of-sample variance across the whole η grid, in both designs, at c = 0.5 and c = 2. For comparison, the
-  paper's S⁺ estimate of R_b is about half the true value (Study 1). Its spread is large for small η, as for
-  any estimate of the variance of a noisy portfolio.
-- **Market factor (simulation): 2–16 times less loss than the paper and Ledoit-Wolf, close to the oracle.**
-  Median relative loss at c = 0.5, 0.9, 1.5, 3: ours 0.16, 0.23, 0.31, 0.52; oracle 0.15, 0.21, 0.28, 0.44;
-  paper 0.85, 3.76, 2.59, 3.47; Ledoit-Wolf 0.72, 1.26, 1.05, 1.03. Same picture with t₅ returns. The second
-  target helps here: ridge with 1/N alone gives 0.19, 0.27, 0.37, 0.65.
-- **The paper's own (Haar) design: no gain.** All estimators are within 0.23–0.38; Ledoit-Wolf is best,
-  and for c ≥ 1.5 ours (0.33–0.38) is no better than the paper's (0.33–0.34), and worse than ridge with 1/N
-  alone. In this design every stock has the same variance and the identity is the natural target, so the extra
-  target adds only estimation noise, and picking η on a noisy curve costs about 20% over the oracle.
-- **S&P 500, p = 150: ours is best or tied at every c**, with a median daily variance of 3.9, 4.1, 4.3 and
-  4.2 ×10⁻⁵ at c = 0.5, 0.9, 1.5, 2, against 4.5–4.7 for Ledoit-Wolf (t = −3.3 to −6.6), 4.9–6.9 for the paper
-  (t ≤ −8.4) and 6.9 for 1/N. Against the paper the variance is 21–41% lower.
-- **S&P 500, p = 54: ours wins at c = 0.5 (4.51 against 4.87 for Ledoit-Wolf, t = −6.1), ties Ledoit-Wolf at
-  c = 0.9 (5.12 against 5.10, t = 0.3), and loses to it at c = 1.5 and 2 (t = 3.0 and 3.7)**, where the
-  estimation window has only 36 and 27 days and the random-matrix estimates are poor. It beats the paper's
-  estimator (by 13–38%, t ≤ −6.8) and 1/N at every c.
-- **Turnover** falls from 1.0–1.5 per day for the paper's estimator at c ≥ 0.9 to 0.2–0.6, close to
-  Ledoit-Wolf (0.2–0.4).
-- **Most of the gain comes from the ridge base**; the inverse-variance target adds a further 2–4% on real data
-  for p = 54, little for p = 150, and helps most in the market simulation.
+**What it showed — simulation** (median relative loss, normal returns, c = 0.5 / 0.9 / 1.5 / 3; ratio = geometric
+mean of ours / rival with its t-statistic):
 
-**Limits:** the estimate of the variance is derived, not proven here (we validated it by simulation only); the
-choice of η on a noisy estimated curve leaves a gap to the oracle; the S&P 500 sample is one 2013–2018 period
-of a bull market with survivorship bias; no transaction costs. Bodnar, Parolya and Thorsen (JMLR 2024) study a
-ridge base with one target; several targets and the comparison on these data are what we add.
+| Design, same window | ours | BPT 2024 | LW nonlinear | LW linear | paper |
+|---|---|---|---|---|---|
+| neutral | 0.38 / 0.55 / 0.73 / 0.95 | 0.38 / 0.55 / 0.73 / 0.96 | 0.39 / 0.58 / 0.74 / 0.95 | 0.58 / 0.95 / 1.10 / 1.10 | 0.68 / 1.76 / 1.45 / 1.33 |
+| paper's bounded | 0.21 / 0.25 / 0.28 / 0.32 | 0.21 / 0.24 / 0.26 / 0.28 | 0.20 / 0.25 / 0.25 / 0.26 | **0.21 / 0.23 / 0.24 / 0.25** | 0.21 / 0.26 / 0.27 / 0.28 |
+| one-factor market | **0.17 / 0.25 / 0.36** / 0.69 | 0.19 / 0.27 / 0.37 / **0.64** | 0.20 / 0.32 / 0.47 / 0.96 | 0.72 / 1.21 / 1.02 / 1.04 | 0.87 / 3.90 / 2.61 / 3.67 |
 
-![Study 5: the estimated loss tracks the true one](results/study5_validation.png)
-![Study 5: simulation](results/study5_sim.png)
-![Study 5: S&P 500, p = 150](results/study5_sp500_p150.png)
+- **Neutral design: ours = BPT 2024** (ratio 0.99–1.01, |t| ≤ 1.9) and close to Ledoit-Wolf nonlinear: better
+  at c = 0.5 and 0.9 (0.973, t = −5.0; 0.946, t = −5.5), equal at 1.5 (0.993, t = −0.6), worse at 3 (1.056,
+  t = 2.4). All three beat Ledoit-Wolf linear (0.59–0.89) and the paper (0.31–0.75) by wide margins.
+- **Paper's design: ours is the worst of the shrinkage estimators** for c ≥ 0.9: 3–13% above BPT (t = 5.7 to
+  8.3) and up to 33% above Ledoit-Wolf linear. With equal variances across stocks, the second target is noise.
+- **Market design: ours beats BPT for c ≤ 1.5** (0.86, 0.92, 0.97; t = −20 to −3) and loses at c = 3 (1.08,
+  t = 4.7); it beats Ledoit-Wolf nonlinear at every c (0.74–0.82). This design is ours, so it carries the least
+  weight.
+- **Same history, neutral design: Ledoit-Wolf nonlinear on n + 120 days wins clearly** (0.32 / 0.44 / 0.53 /
+  0.65; ours with the earlier target is 17–40% worse, t = 17 to 21).
+
+**What it showed — S&P 500, same window (the headline)** (ratio ours / rival of the average variance, 95%
+bootstrap interval, Newey-West t):
+
+| | c = 0.5 | c = 0.9 | c = 1.5 | c = 2 |
+|---|---|---|---|---|
+| p = 150 vs BPT 2024 | 0.998 [0.985, 1.010] | 1.002 [0.983, 1.020] | 1.001 [0.973, 1.030] | 1.001 [0.965, 1.044] |
+| p = 150 vs LW nonlinear | **0.958 [0.925, 0.982], t = −3.5** | **0.966 [0.928, 0.995], t = −2.1** | 1.026 [0.986, 1.062], t = 1.3 | 1.026 [0.977, 1.080], t = 1.1 |
+| p = 150 vs LW linear | 0.862 [0.806, 0.906], t = −6.6 | 0.870 [0.813, 0.922], t = −5.1 | 0.939 [0.890, 0.978], t = −2.8 | 0.963 [0.907, 1.018], t = −1.4 |
+| p = 150 vs paper | 0.792 [0.747, 0.826], t = −9.0 | 0.580 [0.531, 0.627], t = −8.4 | 0.705 [0.655, 0.746], t = −9.7 | 0.760 [0.714, 0.800], t = −8.7 |
+| p = 54 vs BPT 2024 | 1.005 [0.985, 1.027] | 0.990 [0.966, 1.013] | 0.992 [0.961, 1.024] | 1.036 [0.997, 1.080] |
+| p = 54 vs LW nonlinear | 0.975 [0.941, 1.002], t = −1.7 | 0.957 [0.909, 0.996], t = −2.1 | **1.079 [1.036, 1.125], t = 3.1** | **1.133 [1.080, 1.195], t = 3.9** |
+| p = 54 vs LW linear | 0.953 [0.922, 0.982], t = −3.3 | **1.042 [1.002, 1.081], t = 2.3** | **1.076 [1.035, 1.118], t = 3.3** | **1.142 [1.089, 1.201], t = 4.4** |
+| p = 54 vs paper | 0.848 [0.809, 0.883], t = −7.4 | 0.640 [0.589, 0.681], t = −9.4 | 0.820 [0.769, 0.868], t = −6.7 | 0.911 [0.858, 0.958], t = −3.8 |
+
+- **The second target adds nothing on real data: ours and BPT 2024 are indistinguishable** at every c and p
+  (all intervals contain 1, ratios 0.99–1.04). The claim of the earlier version of this study, that several
+  targets improve the estimator, does not survive a same-data comparison.
+- **Ridge-based shrinkage (ours or BPT) beats the paper's estimator at every c and p**, by 9–42% (t ≤ −3.8), and
+  1/N by 13–44%; it beats Ledoit-Wolf linear for p = 150 at c ≤ 1.5.
+- **Against the strongest rival, Ledoit-Wolf nonlinear: better for p = 150 at c = 0.5 and 0.9** (by 4% and 3%),
+  tied for p = 150 at c ≥ 1.5 and for p = 54 at c ≤ 0.9, **worse for p = 54 at c = 1.5 and 2** (by 8% and 13%),
+  where the window has only 36 and 27 days. Ledoit-Wolf linear also beats ours for p = 54 at c ≥ 0.9.
+- **Halves of the period**: the p = 150 gain over nonlinear shrinkage at c = 0.5 holds in both halves (0.973
+  [0.94, 1.00] and 0.930 [0.87, 0.96]); at c = 0.9 it is 0.965 [0.93, 1.00] and 0.970 [0.90, 1.01], so neither
+  half alone excludes 1. The p = 54 losses at c ≥ 1.5 appear in both halves. The gain over the paper holds in
+  both halves except p = 54, c = 2, first half (0.947 [0.89, 1.01]).
+- **Costs**: with 5 or 10 basis points every ratio above changes by at most 0.01. Turnover per day: ours
+  0.18–0.68, BPT 0.18–0.60, Ledoit-Wolf linear 0.19–0.40, nonlinear 0.21–0.90 (0.90 at p = 54, c = 0.9), the
+  paper 0.35–1.48.
+
+**What it showed — S&P 500, same history** (ours with the inverse-variance target from the 120 earlier days):
+- Against BPT 2024 on n days the earlier target helps a little: 0.954–0.982 for p = 54 (t = −1.2 to −4.6) and
+  0.962–1.003 for p = 150. **But this gain comes from data BPT does not see: Ledoit-Wolf nonlinear on the same
+  n + 120 days is as good or better**: for p = 150, 0.947 [0.909, 0.972] (t = −3.8) at c = 0.5 and ties at
+  c ≥ 0.9 (0.988–1.035, intervals contain 1); for p = 54, a tie at c = 0.5 (1.011) and 13–24% worse at
+  c ≥ 0.9 (t = 5.0 to 5.9).
+
+**Limits:** the variance estimate is derived by deterministic equivalents and checked by simulation, not proven;
+its value at the selected (η, β) is optimistic; the S&P 500 sample is one bull-market period with survivorship
+bias (stocks in the index in 2018 with a full 2013–2018 history); costs are proportional and there is no
+short-sale constraint.
+
+![Study 5: the estimated loss tracks the true one at fixed η](results/study5_validation.png)
+![Study 5: simulation, three designs, same window](results/study5_sim.png)
+![Study 5: S&P 500, ratio of variances with 95% intervals, both regimes](results/study5_sp500.png)
 
 ---
 
@@ -266,16 +338,19 @@ ridge base with one target; several targets and the comparison on these data are
 | Ranking robust to heavy tails and a factor model | Reproduces (Study 2) |
 | On S&P 500, shrinkage beats Frahm-Memmel and traditional | Reproduces (Study 3) |
 | Shrinkage improves on simple strategies in practice | Not shown by the paper; equal weights do as well or better for c ≥ 0.9 (Study 3) |
-| *Our extension:* ridge base + several targets | Beats the paper's estimator at every c on S&P 500 (13–41% lower variance) and Ledoit-Wolf for p = 150; loses to Ledoit-Wolf for p = 54 at c ≥ 1.5 (Study 5) |
+| *Our extension:* several targets (ridge base) | Does not survive: on S&P 500 with the same data it equals BPT 2024 (ratio 0.99–1.04, all 95% intervals contain 1); helps only in our market simulation or with 120 extra days, where Ledoit-Wolf nonlinear on the same days is as good or better (Study 5) |
+| *Our extension:* ridge base (BPT 2024) instead of S⁻¹/S⁺ | Survives: 9–42% lower variance than the paper's estimator at every c and p (t ≤ −3.8); beats Ledoit-Wolf nonlinear only for p = 150 at c ≤ 0.9, loses to it for p = 54 at c ≥ 1.5 (Study 5) |
 
 ## Next
 
-Study 5 covers the first two ideas of the replication (a regularised base for c > 1, several targets) and part
-of the third (the 2013–2018 sample, Ledoit-Wolf, turnover). What is left: (1) a proof of the variance estimate
-of Study 5 and a less noisy choice of η (for example smoothing the estimated curve, or a closed-form η); (2)
-better estimates for short windows (n < 40), where Ledoit-Wolf still wins; (3) other targets: the previous
-period's weights, a factor-model GMV portfolio; (4) a no-short-sale constraint and transaction costs; (5) a
-sample without survivorship bias and outside the 2013–2018 bull market.
+Study 5 settles that a second target chosen by the random-matrix estimate does not help on these data once all
+estimators see the same days, and that the ridge base (BPT 2024) is what improves on the paper. What is left:
+(1) the optimism of the estimated loss at the selected η: a less noisy selection (smoothing the estimated curve,
+or a closed-form η) is the most promising change, since the oracle choice in the same family is 4–31% better
+in simulation; (2) a ridge base whose regularisation follows the eigenvalue structure, i.e. combining the
+paper's target shrinkage with nonlinear shrinkage, which wins for short windows (n < 40); (3) targets that are
+independent of the window by construction, such as the previous period's weights; (4) a no-short-sale
+constraint; (5) a sample without survivorship bias and outside the 2013–2018 bull market.
 
 ## Files
 
@@ -284,7 +359,8 @@ sample without survivorship bias and outside the 2013–2018 bull market.
 | `common.py` | estimators, covariance designs, theory formulas, chart style |
 | `fetch_sp500.py` | downloads the S&P 500 data and builds the returns in the paper's window |
 | `study0_theory.py` … `study3_sp500.py` | one study each, as above |
-| `study5_ridge_multitarget.py` | our extension: ridge base and several targets (validation, simulation, S&P 500) |
+| `study5_ridge_multitarget.py` | our extension and its fair comparison (validation, simulation, S&P 500 in two regimes) |
+| `tests/test_study5.py` | quick checks: reductions to the paper's estimator, nonlinear shrinkage, no look-ahead |
 | `results/` | tables (`.csv`), overview figures (`.png`), raw simulation output (`.npz`) |
 | `results/slides/` | one chart per slide, for the presentation |
 | `fonts/` | Caladea and Caveat (SIL Open Font License), used by the charts |

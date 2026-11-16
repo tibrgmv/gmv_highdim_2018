@@ -280,16 +280,18 @@ def multi_target(S, n, targets, Sinv=None):
 ETA_GRID = np.logspace(-3, 2, 41)       # ridge η relative to the average eigenvalue tr(S)/p
 
 
-def ridge_terms(S, n, targets, etas=ETA_GRID):
+def ridge_terms(S, n, targets, etas=ETA_GRID, demeaned=True):
     """For each η: the ridge GMV weights w_η = (S+ηI)⁻¹1 / 1'(S+ηI)⁻¹1, and random-matrix estimates of their
     out-of-sample variance w_η'Σw_η and of w_η'Σb_k, valid for c < 1 and c > 1. Derivation (deterministic
     equivalents, (S+ηI)⁻¹ ≍ (xΣ+ηI)⁻¹ with x = 1 - c + cη m, m = tr(S+ηI)⁻¹/p):
         1'AΣb  ≈ (1 - η 1'Ab) / x
         1'AΣA1 ≈ (1'A1 - η 1'A²1) / D / (1 - c(1 - 2ηm + η² q₂)),
     with A = (S+ηI)⁻¹, a₂ = tr A²/p, x' = cm - cηa₂, D = x - ηx' = 1 - c + cη²a₂, q₂ = (x a₂ - x'm)/D.
-    The data are demeaned, so we use n - 1 observations. Returns η, weights (E x p), w'Σw (E), w'Σb (E x K), B (K x K)."""
+    The theory needs targets independent of the data in S. With demeaned=True (the default) we use n - 1
+    observations; demeaned=False uses n and S as given, the paper's convention.
+    Returns η, weights (E x p), w'Σw (E), w'Σb (E x K), B (K x K)."""
     p = S.shape[0]
-    ne = n - 1
+    ne = n - 1 if demeaned else n
     St = S * n / ne
     c = p / ne
     l, V = np.linalg.eigh(St)
@@ -314,7 +316,8 @@ def ridge_terms(S, n, targets, etas=ETA_GRID):
 
 
 def best_combination(W, vww, vwb, B, T):
-    """For each η the best β (w = w_η + Σ β_k (b_k - w_η)) and its loss; returns the weights at the best η."""
+    """For each η the best β (w = w_η + Σ β_k (b_k - w_η)) and its loss.
+    Returns (estimated loss, η index, β, weights) at the best η."""
     best = (np.inf, None, None, None)
     for e in range(len(vww)):
         if not np.isfinite(vww[e]) or vww[e] <= 0:
@@ -328,14 +331,74 @@ def best_combination(W, vww, vwb, B, T):
     return best
 
 
-def ridge_multi_target(S, n, targets=(), Sigma=None, etas=ETA_GRID):
+def ridge_choose(terms, T, keep):
+    """Our estimator from precomputed ridge_terms(S, n, T): keep = indices of the targets to use. One
+    eigendecomposition serves several target sets (for example BPT 2024 = ridge + 1/N alone)."""
+    eta, W, vww, vwb, B = terms
+    keep = list(keep)
+    loss, e, beta, w = best_combination(W, vww, vwb[:, keep], B[np.ix_(keep, keep)], T[keep])
+    return w, (e, beta, loss)
+
+
+def ridge_multi_target(S, n, targets=(), Sigma=None, etas=ETA_GRID, demeaned=True):
     """Our estimator: a ridge GMV portfolio shrunk towards several targets; η and β minimise the random-matrix
-    estimate of the out-of-sample variance. With Sigma given, the oracle: the same family, chosen with the true Σ.
-    Returns weights and (η index, β)."""
-    eta, W, vww, vwb, B = ridge_terms(S, n, targets, etas)
+    estimate of the out-of-sample variance. With one target (1/N) this is the method of Bodnar, Parolya and
+    Thorsén (2024, JMLR). With Sigma given, the oracle: the same family, chosen with the true Σ.
+    Returns weights and (η index, β, estimated loss)."""
+    eta, W, vww, vwb, B = ridge_terms(S, n, targets, etas, demeaned)
     T = np.atleast_2d(targets) if len(targets) else np.zeros((0, S.shape[0]))
     if Sigma is not None:
         vww = np.einsum("ep,pq,eq->e", W, Sigma, W)
         vwb, B = W @ Sigma @ T.T, T @ Sigma @ T.T
     loss, e, beta, w = best_combination(W, vww, vwb, B, T)
-    return w, (e, beta)
+    return w, (e, beta, loss)
+
+
+def lw_nonlinear(Y):
+    """Analytical nonlinear shrinkage of the covariance matrix: Ledoit and Wolf (2020), "Analytical nonlinear
+    shrinkage of large-dimensional covariance matrices", Annals of Statistics 48(5), 3043-3065, Section 4
+    (kernel estimate of the sample spectral density and its Hilbert transform, Epanechnikov kernel, locally
+    adaptive bandwidth h·λ_j with h = n^(-1/3)). Data are demeaned, so n - 1 observations."""
+    n0, p = Y.shape
+    Yc = Y - Y.mean(axis=0)
+    n = n0 - 1
+    S = Yc.T @ Yc / n
+    lam, U = np.linalg.eigh(S)
+    k = min(p, n)
+    lam = np.clip(lam[p - k:], 1e-300, None)                # the non-zero eigenvalues, ascending
+    h = n ** (-1 / 3)
+    H = h * lam[None, :]                                    # bandwidth of eigenvalue j, column j
+    x = (lam[:, None] - lam[None, :]) / H
+    f = 3 / (4 * np.sqrt(5)) * np.mean(np.maximum(1 - x ** 2 / 5, 0) / H, axis=1)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        hf = -3 / (10 * np.pi) * x + 3 / (4 * np.sqrt(5) * np.pi) * (1 - x ** 2 / 5) * np.log(np.abs((np.sqrt(5) - x) / (np.sqrt(5) + x)))
+    edge = np.isclose(np.abs(x), np.sqrt(5))
+    hf[edge] = (-3 / (10 * np.pi) * x)[edge]
+    Hf = np.mean(hf / H, axis=1)
+    if p <= n:
+        r = p / n
+        d = lam / ((np.pi * r * lam * f) ** 2 + (1 - r - np.pi * r * lam * Hf) ** 2)
+    else:
+        Hf0 = (1 / np.pi) * (3 / (10 * h ** 2) + 3 / (4 * np.sqrt(5) * h) * (1 - 1 / (5 * h ** 2))
+                             * np.log((1 + np.sqrt(5) * h) / (1 - np.sqrt(5) * h))) * np.mean(1 / lam)
+        d0 = 1 / (np.pi * (p - n) / n * Hf0)
+        d1 = lam / (np.pi ** 2 * lam ** 2 * (f ** 2 + Hf ** 2))
+        d = np.r_[np.full(p - n, d0), d1]
+    return (U * d) @ U.T
+
+
+def make_sigma_empirical(p, rng):
+    """A neutral design: Σ = the sample covariance of p random S&P 500 stocks over the full 2013-2018 sample
+    (1258 daily returns), scaled to an average variance of 1. Neither ours nor the paper's construction."""
+    close = pd_read_close()
+    R = close.dropna(axis=1).pct_change().iloc[1:].to_numpy()
+    idx = rng.choice(R.shape[1], p, replace=False)
+    Sigma = np.cov(R[:, idx], rowvar=False)
+    Sigma /= np.trace(Sigma) / p
+    lam, V = np.linalg.eigh(Sigma)
+    return Sigma, (V * np.sqrt(lam)) @ V.T, (V / np.sqrt(lam)) @ V.T
+
+
+def pd_read_close():
+    import pandas as pd
+    return pd.read_csv(os.path.join(DATA, "sp500_close.csv"), index_col=0, parse_dates=True)

@@ -1,0 +1,337 @@
+design,returns,c,ours,rival,ratio (geometric mean),t-stat
+neutral: S&P 500 covariance,normal,0.5,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,0.9932478631093612,-1.944259129170025
+neutral: S&P 500 covariance,normal,0.9,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.000634673160775,0.07727442975561977
+neutral: S&P 500 covariance,normal,1.5,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,0.997770837406684,-0.2110151097613
+neutral: S&P 500 covariance,normal,3.0,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.0119293889569458,0.48593979214579086
+neutral: S&P 500 covariance,t5,0.5,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.000048995478446,0.011597992582993261
+neutral: S&P 500 covariance,t5,0.9,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.0138748284310568,1.1655598136744882
+neutral: S&P 500 covariance,t5,1.5,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,0.9994925941748726,-0.033832132043154085
+neutral: S&P 500 covariance,t5,3.0,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.0007806031702335,0.03592780565244581
+one-factor market,normal,0.5,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,0.8600182244570828,-20.239007737745034
+one-factor market,normal,0.9,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,0.9155191314115719,-8.246753307282061
+one-factor market,normal,1.5,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,0.9669865139553924,-3.021387254716477
+one-factor market,normal,3.0,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.0828090390089093,4.653278387270624
+one-factor market,t5,0.5,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,0.8980513852304383,-14.10088870063778
+one-factor market,t5,0.9,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,0.9579934726682556,-4.390120728891717
+one-factor market,t5,1.5,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.023422465858526,1.493312796621038
+one-factor market,t5,3.0,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.0585770953213027,3.5410487391582914
+paper's bounded design,normal,0.5,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.0155504044563,4.822187016282824
+paper's bounded design,normal,0.9,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.0256136841134675,5.688554211074647
+paper's bounded design,normal,1.5,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.0623874478776547,7.345744931782728
+paper's bounded design,normal,3.0,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.1266196795393872,8.314483993460849
+paper's bounded design,t5,0.5,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.0476494273579469,8.79463847562723
+paper's bounded design,t5,0.9,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.0751451391840132,7.879779072476838
+paper's bounded design,t5,1.5,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.0931253940617705,7.657753510294551
+paper's bounded design,t5,3.0,ours: ridge + 1/N + inv. variance,BPT 2024: ridge + 1/N,1.1672898157185405,8.820516472015324
+neutral: S&P 500 covariance,normal,0.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.6560585379447513,-39.9467359478095
+neutral: S&P 500 covariance,normal,0.9,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.5864396409263121,-40.27287779346252
+neutral: S&P 500 covariance,normal,1.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.6773986990621527,-24.76554277994109
+neutral: S&P 500 covariance,normal,3.0,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.8904397479522074,-5.119752300944599
+neutral: S&P 500 covariance,t5,0.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.6652508627411435,-33.73895137192516
+neutral: S&P 500 covariance,t5,0.9,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.6180123467066398,-31.647386365377763
+neutral: S&P 500 covariance,t5,1.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.7042842173961276,-18.418486953562642
+neutral: S&P 500 covariance,t5,3.0,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.8847893194280461,-5.574132150521642
+one-factor market,normal,0.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.23238105294331096,-93.97861562170166
+one-factor market,normal,0.9,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.20417644623282952,-75.52896068372839
+one-factor market,normal,1.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.35499200310913614,-50.015490893249854
+one-factor market,normal,3.0,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.6761644728623393,-21.20014684497896
+one-factor market,t5,0.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.24908531447990642,-92.6313027029333
+one-factor market,t5,0.9,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.21721389726157672,-74.45174874872532
+one-factor market,t5,1.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.391446075610921,-38.420315775474165
+one-factor market,t5,3.0,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,0.6795422208963359,-23.605069556293365
+paper's bounded design,normal,0.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,1.0199978412720894,3.211756989475663
+paper's bounded design,normal,0.9,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,1.1068378300094543,10.326269870129472
+paper's bounded design,normal,1.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,1.1935028870861624,12.308049570168816
+paper's bounded design,normal,3.0,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,1.3304955835216092,11.726769736219127
+paper's bounded design,t5,0.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,1.0593114118316467,7.962358141502563
+paper's bounded design,t5,0.9,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,1.169240491580423,10.092842184676195
+paper's bounded design,t5,1.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,1.2459741778862563,12.670698820273318
+paper's bounded design,t5,3.0,ours: ridge + 1/N + inv. variance,Ledoit-Wolf linear,1.346234610613448,13.959427957413762
+neutral: S&P 500 covariance,normal,0.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.9730335124314659,-4.964215364052056
+neutral: S&P 500 covariance,normal,0.9,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.9458363858538353,-5.53746568638334
+neutral: S&P 500 covariance,normal,1.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.9925582900447965,-0.5878454983662953
+neutral: S&P 500 covariance,normal,3.0,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,1.0556135854449298,2.385606594388158
+neutral: S&P 500 covariance,t5,0.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.9801926421745543,-2.9908252984532853
+neutral: S&P 500 covariance,t5,0.9,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.969910466132844,-2.3632711988466304
+neutral: S&P 500 covariance,t5,1.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,1.0102123654893223,0.6603396074731039
+neutral: S&P 500 covariance,t5,3.0,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,1.043806726029435,1.9233627529277684
+one-factor market,normal,0.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.8145936847835865,-22.9747867465511
+one-factor market,normal,0.9,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.7636694354959408,-20.512686838128236
+one-factor market,normal,1.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.7611925721453927,-18.427648539479804
+one-factor market,normal,3.0,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.7381649638691388,-16.800447985324375
+one-factor market,t5,0.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.8556772067168171,-14.807255060283952
+one-factor market,t5,0.9,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.8013590897203426,-17.711734413206713
+one-factor market,t5,1.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.8190106431668548,-9.534401670699399
+one-factor market,t5,3.0,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,0.745372969635526,-16.319363806226036
+paper's bounded design,normal,0.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,1.04697763403719,8.425596033101431
+paper's bounded design,normal,0.9,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,1.0116960526588847,0.9514010099467806
+paper's bounded design,normal,1.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,1.1575923572059057,10.05265908253153
+paper's bounded design,normal,3.0,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,1.294186861576368,10.676537370551483
+paper's bounded design,t5,0.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,1.0906330383448897,12.477789595235764
+paper's bounded design,t5,0.9,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,1.0353089048200252,2.1887470714904915
+paper's bounded design,t5,1.5,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,1.206010969965201,10.858754719276252
+paper's bounded design,t5,3.0,ours: ridge + 1/N + inv. variance,Ledoit-Wolf nonlinear,1.2905138624922337,12.058545797585044
+neutral: S&P 500 covariance,normal,0.5,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.0420780100051925,10.465568558148728
+neutral: S&P 500 covariance,normal,0.9,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.0779717315110655,7.319515107036115
+neutral: S&P 500 covariance,normal,1.5,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.139376437090373,12.368134003941625
+neutral: S&P 500 covariance,normal,3.0,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.2478917426024179,10.48205693198626
+neutral: S&P 500 covariance,t5,0.5,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.0612349194728214,13.458540561872578
+neutral: S&P 500 covariance,t5,0.9,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.0982135763296215,8.243825848025825
+neutral: S&P 500 covariance,t5,1.5,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.15073440330107,10.209856660036854
+neutral: S&P 500 covariance,t5,3.0,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.2229290732550222,10.79066174275521
+one-factor market,normal,0.5,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.078228701015973,13.342512565507588
+one-factor market,normal,0.9,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.117156210030616,11.105595915963287
+one-factor market,normal,1.5,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.1699418165378714,12.751615651385544
+one-factor market,normal,3.0,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.3045500901473357,16.22675696985314
+one-factor market,t5,0.5,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.0842213844216468,10.2017120614224
+one-factor market,t5,0.9,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.1302355859121525,14.345237075091859
+one-factor market,t5,1.5,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.2298658164064582,10.955793503120043
+one-factor market,t5,3.0,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.2794607932170399,16.183566824221995
+paper's bounded design,normal,0.5,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.076044867014381,13.455202321323892
+paper's bounded design,normal,0.9,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.1344884056841678,12.483445857743453
+paper's bounded design,normal,1.5,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.2123568283947594,13.374407740271488
+paper's bounded design,normal,3.0,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.3545383609647608,12.540499250800144
+paper's bounded design,t5,0.5,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.119485661950733,15.683079961581013
+paper's bounded design,t5,0.9,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.2011292540491456,11.806424606473833
+paper's bounded design,t5,1.5,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.266869637614144,13.723210930240507
+paper's bounded design,t5,3.0,ours: ridge + 1/N + inv. variance,oracle: ridge + targets,1.369021090724382,14.903417113604453
+neutral: S&P 500 covariance,normal,0.5,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9992205507466588,-1.538334060911928
+neutral: S&P 500 covariance,normal,0.9,ours: ridge + 1/N + inv. variance,"ours, target from whole window",1.0000841609732694,0.08097623044312462
+neutral: S&P 500 covariance,normal,1.5,ours: ridge + 1/N + inv. variance,"ours, target from whole window",1.0010806494768223,0.5673354151633063
+neutral: S&P 500 covariance,normal,3.0,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9709951998045377,-2.112178948189975
+neutral: S&P 500 covariance,t5,0.5,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9991734735331919,-1.31308476920301
+neutral: S&P 500 covariance,t5,0.9,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9998894053425444,-0.10060183788440613
+neutral: S&P 500 covariance,t5,1.5,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.999292507682162,-0.36240036521423014
+neutral: S&P 500 covariance,t5,3.0,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9574195678324358,-3.178185538104512
+one-factor market,normal,0.5,ours: ridge + 1/N + inv. variance,"ours, target from whole window",1.0085432227006241,3.9227410417141906
+one-factor market,normal,0.9,ours: ridge + 1/N + inv. variance,"ours, target from whole window",1.0063214328175887,2.0950751551578026
+one-factor market,normal,1.5,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9875779480300199,-1.8210207737876556
+one-factor market,normal,3.0,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9003400745694593,-8.506557915261014
+one-factor market,t5,0.5,ours: ridge + 1/N + inv. variance,"ours, target from whole window",1.001827337191178,0.5616634808337705
+one-factor market,t5,0.9,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9917927105254071,-1.499134517597664
+one-factor market,t5,1.5,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9652258755195956,-4.688104671703376
+one-factor market,t5,3.0,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.8930584994254935,-8.213846165962158
+paper's bounded design,normal,0.5,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.996879427580846,-1.2131610057297484
+paper's bounded design,normal,0.9,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9874349436512588,-3.621021145190782
+paper's bounded design,normal,1.5,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9850457445232924,-2.042969210781256
+paper's bounded design,normal,3.0,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9568001351509648,-3.3832998614452996
+paper's bounded design,t5,0.5,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9760455474390646,-5.490069182650238
+paper's bounded design,t5,0.9,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9503706706078879,-6.446012000730127
+paper's bounded design,t5,1.5,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.9565498312474473,-4.692172766437904
+paper's bounded design,t5,3.0,ours: ridge + 1/N + inv. variance,"ours, target from whole window",0.8891679589886752,-7.277097326325295
+neutral: S&P 500 covariance,normal,0.5,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.5620480719786523,-53.11008835646993
+neutral: S&P 500 covariance,normal,0.9,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.31026278825261056,-73.17924304901622
+neutral: S&P 500 covariance,normal,1.5,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.514073078890166,-36.21439544182961
+neutral: S&P 500 covariance,normal,3.0,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.7498986657517659,-12.07435508282684
+neutral: S&P 500 covariance,t5,0.5,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.5658780560997356,-51.90317017424883
+neutral: S&P 500 covariance,t5,0.9,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.32062585484666395,-59.71340870976945
+neutral: S&P 500 covariance,t5,1.5,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.516486877298154,-34.01502175422741
+neutral: S&P 500 covariance,t5,3.0,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.7161346653296206,-14.960649625643386
+one-factor market,normal,0.5,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.19141595242837647,-107.70092882902064
+one-factor market,normal,0.9,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.06292426270919851,-139.4481746903021
+one-factor market,normal,1.5,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.13676307024750073,-112.16912447080982
+one-factor market,normal,3.0,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.19169985828123523,-67.62831085878601
+one-factor market,t5,0.5,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.2046330328192423,-111.90356435989364
+one-factor market,t5,0.9,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.06491366036225522,-133.51124209396568
+one-factor market,t5,1.5,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.1515966823504224,-86.5867504458296
+one-factor market,t5,3.0,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.19007833568324917,-74.43654027085262
+paper's bounded design,normal,0.5,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.9954712387010487,-1.0287130247939942
+paper's bounded design,normal,0.9,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.9492727617967431,-5.60071728230762
+paper's bounded design,normal,1.5,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",1.0574133796004952,3.3955967427424025
+paper's bounded design,normal,3.0,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",1.1461000728607478,4.5203325785467445
+paper's bounded design,t5,0.5,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",1.0386886553947448,6.0919367940190465
+paper's bounded design,t5,0.9,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",0.9818615476832755,-1.474863580522722
+paper's bounded design,t5,1.5,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",1.0845855758548635,4.3244369422819435
+paper's bounded design,t5,3.0,ours: ridge + 1/N + inv. variance,"paper: bona fide, 1/N",1.179347850887017,7.042526803823785
+neutral: S&P 500 covariance,normal,0.5,"ours, target from prior days",BPT 2024: ridge + 1/N,0.9845117492732782,-5.3043575459587595
+neutral: S&P 500 covariance,normal,0.9,"ours, target from prior days",BPT 2024: ridge + 1/N,0.982807316062974,-2.2708407580288728
+neutral: S&P 500 covariance,normal,1.5,"ours, target from prior days",BPT 2024: ridge + 1/N,0.9735451985950394,-2.6284717896131653
+neutral: S&P 500 covariance,normal,3.0,"ours, target from prior days",BPT 2024: ridge + 1/N,0.9149641967135055,-6.55922741195309
+neutral: S&P 500 covariance,t5,0.5,"ours, target from prior days",BPT 2024: ridge + 1/N,0.9861262772585038,-3.968083208946554
+neutral: S&P 500 covariance,t5,0.9,"ours, target from prior days",BPT 2024: ridge + 1/N,0.9910444249064927,-0.8602095116806623
+neutral: S&P 500 covariance,t5,1.5,"ours, target from prior days",BPT 2024: ridge + 1/N,0.9590234867130101,-3.688023183659789
+neutral: S&P 500 covariance,t5,3.0,"ours, target from prior days",BPT 2024: ridge + 1/N,0.9190420374339665,-5.234274594809231
+one-factor market,normal,0.5,"ours, target from prior days",BPT 2024: ridge + 1/N,0.8038623358363661,-31.816119614804958
+one-factor market,normal,0.9,"ours, target from prior days",BPT 2024: ridge + 1/N,0.7988981295185442,-26.003709302367334
+one-factor market,normal,1.5,"ours, target from prior days",BPT 2024: ridge + 1/N,0.7954363786767338,-27.552669251279937
+one-factor market,normal,3.0,"ours, target from prior days",BPT 2024: ridge + 1/N,0.7779569664651733,-18.735120652956297
+one-factor market,t5,0.5,"ours, target from prior days",BPT 2024: ridge + 1/N,0.8388084666729041,-27.34823969114043
+one-factor market,t5,0.9,"ours, target from prior days",BPT 2024: ridge + 1/N,0.8328149216719294,-24.400583135720584
+one-factor market,t5,1.5,"ours, target from prior days",BPT 2024: ridge + 1/N,0.8385621595911107,-10.199606306222373
+one-factor market,t5,3.0,"ours, target from prior days",BPT 2024: ridge + 1/N,0.7925761714673767,-23.283894150619368
+paper's bounded design,normal,0.5,"ours, target from prior days",BPT 2024: ridge + 1/N,1.0075755983703125,3.7694767969068255
+paper's bounded design,normal,0.9,"ours, target from prior days",BPT 2024: ridge + 1/N,1.008666574802287,3.7279949403249697
+paper's bounded design,normal,1.5,"ours, target from prior days",BPT 2024: ridge + 1/N,1.02940255216075,7.01101254971288
+paper's bounded design,normal,3.0,"ours, target from prior days",BPT 2024: ridge + 1/N,1.0617921581887138,6.647847854685567
+paper's bounded design,t5,0.5,"ours, target from prior days",BPT 2024: ridge + 1/N,1.0085847107499788,4.426025514230735
+paper's bounded design,t5,0.9,"ours, target from prior days",BPT 2024: ridge + 1/N,1.0117773333955078,3.2616559532507403
+paper's bounded design,t5,1.5,"ours, target from prior days",BPT 2024: ridge + 1/N,1.0341127921066682,5.182179751265618
+paper's bounded design,t5,3.0,"ours, target from prior days",BPT 2024: ridge + 1/N,1.0471547846773959,6.302459620124084
+neutral: S&P 500 covariance,normal,0.5,"ours, target from prior days",Ledoit-Wolf linear,0.6502881735840595,-40.7938150026952
+neutral: S&P 500 covariance,normal,0.9,"ours, target from prior days",Ledoit-Wolf linear,0.5759916031203908,-43.067434221328554
+neutral: S&P 500 covariance,normal,1.5,"ours, target from prior days",Ledoit-Wolf linear,0.6609516196329621,-25.951277899035905
+neutral: S&P 500 covariance,normal,3.0,"ours, target from prior days",Ledoit-Wolf linear,0.8051159474147176,-13.689470685679284
+neutral: S&P 500 covariance,t5,0.5,"ours, target from prior days",Ledoit-Wolf linear,0.655989216212428,-35.96084978602533
+neutral: S&P 500 covariance,t5,0.9,"ours, target from prior days",Ledoit-Wolf linear,0.6040959628860557,-35.16561298209536
+neutral: S&P 500 covariance,t5,1.5,"ours, target from prior days",Ledoit-Wolf linear,0.6757679944209817,-20.560962514991672
+neutral: S&P 500 covariance,t5,3.0,"ours, target from prior days",Ledoit-Wolf linear,0.8125243197670621,-11.969290926835274
+one-factor market,normal,0.5,"ours, target from prior days",Ledoit-Wolf linear,0.21720746225005857,-103.0961658972412
+one-factor market,normal,0.9,"ours, target from prior days",Ledoit-Wolf linear,0.1781679654641998,-83.84476740358078
+one-factor market,normal,1.5,"ours, target from prior days",Ledoit-Wolf linear,0.292013951939517,-62.981919885827566
+one-factor market,normal,3.0,"ours, target from prior days",Ledoit-Wolf linear,0.48579836627608747,-32.604985349517136
+one-factor market,t5,0.5,"ours, target from prior days",Ledoit-Wolf linear,0.23265358101531805,-106.90517677868198
+one-factor market,t5,0.9,"ours, target from prior days",Ledoit-Wolf linear,0.1888311141934035,-83.74351890933302
+one-factor market,t5,1.5,"ours, target from prior days",Ledoit-Wolf linear,0.32073935982282353,-40.89468471785679
+one-factor market,t5,3.0,"ours, target from prior days",Ledoit-Wolf linear,0.5087857787296843,-32.638914401215104
+paper's bounded design,normal,0.5,"ours, target from prior days",Ledoit-Wolf linear,1.011988110827813,2.098553245546227
+paper's bounded design,normal,0.9,"ours, target from prior days",Ledoit-Wolf linear,1.0885485833023631,8.749561120904126
+paper's bounded design,normal,1.5,"ours, target from prior days",Ledoit-Wolf linear,1.1564471327594272,10.614628273223886
+paper's bounded design,normal,3.0,"ours, target from prior days",Ledoit-Wolf linear,1.253936712401066,11.002680572879735
+paper's bounded design,t5,0.5,"ours, target from prior days",Ledoit-Wolf linear,1.0198118435388928,3.2005482416636863
+paper's bounded design,t5,0.9,"ours, target from prior days",Ledoit-Wolf linear,1.100326815007642,6.8776577269405275
+paper's bounded design,t5,1.5,"ours, target from prior days",Ledoit-Wolf linear,1.1787100025177508,10.52675166774834
+paper's bounded design,t5,3.0,"ours, target from prior days",Ledoit-Wolf linear,1.2076829548404944,11.267948976050771
+neutral: S&P 500 covariance,normal,0.5,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.8533070640657718,-13.902641272902567
+neutral: S&P 500 covariance,normal,0.9,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.8002121572763126,-14.216590053995317
+neutral: S&P 500 covariance,normal,1.5,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.8428768050506492,-10.098748779940012
+neutral: S&P 500 covariance,normal,3.0,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.8927969486175327,-5.280072506498684
+neutral: S&P 500 covariance,t5,0.5,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.8637738906859612,-12.772627013450414
+neutral: S&P 500 covariance,t5,0.9,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.8190474284083218,-10.4842786191031
+neutral: S&P 500 covariance,t5,1.5,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.8267298797410322,-9.048019557586018
+neutral: S&P 500 covariance,t5,3.0,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.9271440265904767,-3.9848971231240657
+one-factor market,normal,0.5,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.298067493912413,-80.93369296014876
+one-factor market,normal,0.9,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.24551978470470256,-78.34386886690996
+one-factor market,normal,1.5,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.26212354809244165,-60.59811045368037
+one-factor market,normal,3.0,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.4205559866146441,-34.213257242088524
+one-factor market,t5,0.5,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.31761659655691254,-90.73056874510323
+one-factor market,t5,0.9,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.25635403809183904,-76.94448171778447
+one-factor market,t5,1.5,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.29663430519830614,-41.314073686738155
+one-factor market,t5,3.0,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",0.44457594895371877,-32.52618117356866
+paper's bounded design,normal,0.5,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",1.0839936200812144,12.365576592474403
+paper's bounded design,normal,0.9,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",1.1691301809731538,15.235401612866868
+paper's bounded design,normal,1.5,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",1.244867072260855,15.331266741259162
+paper's bounded design,normal,3.0,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",1.3621969559016336,15.266350334113643
+paper's bounded design,t5,0.5,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",1.0988810157425786,13.267580185446265
+paper's bounded design,t5,0.9,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",1.1754583900839837,11.26527306909233
+paper's bounded design,t5,1.5,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",1.269692505037785,15.395903567862245
+paper's bounded design,t5,3.0,"ours, target from prior days","Ledoit-Wolf linear, n + 120 days",1.3044291361677902,15.7792323450332
+neutral: S&P 500 covariance,normal,0.5,"ours, target from prior days",Ledoit-Wolf nonlinear,0.964475193962686,-7.333104971448757
+neutral: S&P 500 covariance,normal,0.9,"ours, target from prior days",Ledoit-Wolf nonlinear,0.9289853177677702,-7.969420875525995
+neutral: S&P 500 covariance,normal,1.5,"ours, target from prior days",Ledoit-Wolf nonlinear,0.9684592106443347,-2.475717388709984
+neutral: S&P 500 covariance,normal,3.0,"ours, target from prior days",Ledoit-Wolf nonlinear,0.9544624820532583,-3.102604355617585
+neutral: S&P 500 covariance,t5,0.5,"ours, target from prior days",Ledoit-Wolf nonlinear,0.9665463648221851,-5.818439540095807
+neutral: S&P 500 covariance,t5,0.9,"ours, target from prior days",Ledoit-Wolf nonlinear,0.9480700508236117,-4.494132362913249
+neutral: S&P 500 covariance,t5,1.5,"ours, target from prior days",Ledoit-Wolf nonlinear,0.9693092182158399,-2.100704912407416
+neutral: S&P 500 covariance,t5,3.0,"ours, target from prior days",Ledoit-Wolf nonlinear,0.9585540098784189,-2.4657568821288285
+one-factor market,normal,0.5,"ours, target from prior days",Ledoit-Wolf nonlinear,0.7614038442279124,-29.268009737121883
+one-factor market,normal,0.9,"ours, target from prior days",Ledoit-Wolf nonlinear,0.6663914086071913,-30.060416986955005
+one-factor market,normal,1.5,"ours, target from prior days",Ledoit-Wolf nonlinear,0.6261517139326834,-27.100518848983693
+one-factor market,normal,3.0,"ours, target from prior days",Ledoit-Wolf nonlinear,0.530343352663668,-27.58056176796064
+one-factor market,t5,0.5,"ours, target from prior days",Ledoit-Wolf nonlinear,0.7992296404608449,-19.69054276413976
+one-factor market,t5,0.9,"ours, target from prior days",Ledoit-Wolf nonlinear,0.6966475519689107,-32.69246279692705
+one-factor market,t5,1.5,"ours, target from prior days",Ledoit-Wolf nonlinear,0.6710731458156614,-15.093698617668995
+one-factor market,t5,3.0,"ours, target from prior days",Ledoit-Wolf nonlinear,0.558074472988369,-26.060018954398814
+paper's bounded design,normal,0.5,"ours, target from prior days",Ledoit-Wolf nonlinear,1.0387560395489452,8.314986422814505
+paper's bounded design,normal,0.9,"ours, target from prior days",Ledoit-Wolf nonlinear,0.9949789165093996,-0.406761615399447
+paper's bounded design,normal,1.5,"ours, target from prior days",Ledoit-Wolf nonlinear,1.1216515493006527,8.144610026826827
+paper's bounded design,normal,3.0,"ours, target from prior days",Ledoit-Wolf nonlinear,1.2197172531323681,9.662085028085057
+paper's bounded design,t5,0.5,"ours, target from prior days",Ledoit-Wolf nonlinear,1.0499655502962628,9.19175353713447
+paper's bounded design,t5,0.9,"ours, target from prior days",Ledoit-Wolf nonlinear,0.9742890004175955,-1.9341520344599497
+paper's bounded design,t5,1.5,"ours, target from prior days",Ledoit-Wolf nonlinear,1.1409042166954828,8.48178428603605
+paper's bounded design,t5,3.0,"ours, target from prior days",Ledoit-Wolf nonlinear,1.1576968697952679,8.809815998150585
+neutral: S&P 500 covariance,normal,0.5,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.1736437060836686,17.54531996454807
+neutral: S&P 500 covariance,normal,0.9,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.2439460241823344,16.880083363834906
+neutral: S&P 500 covariance,normal,1.5,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.3605526339300338,20.520605053507623
+neutral: S&P 500 covariance,normal,3.0,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.4012869558521173,19.440783127570402
+neutral: S&P 500 covariance,t5,0.5,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.1855881704391396,20.286611337478206
+neutral: S&P 500 covariance,t5,0.9,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.262320104161473,14.398462095139486
+neutral: S&P 500 covariance,t5,1.5,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.3196240832043935,16.21464342489426
+neutral: S&P 500 covariance,t5,3.0,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.3929195484239023,17.399075553581852
+one-factor market,normal,0.5,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",0.9019615483067,-11.807057164411269
+one-factor market,normal,0.9,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",0.9395500963144884,-5.324441487447377
+one-factor market,normal,1.5,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.0482923212866766,3.2395171734026373
+one-factor market,normal,3.0,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.3418526920598846,13.891866075830409
+one-factor market,t5,0.5,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",0.9443999464321305,-5.969503058335306
+one-factor market,t5,0.9,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",0.9732948133756043,-2.5287724094615163
+one-factor market,t5,1.5,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.1330094406837665,4.949340599610695
+one-factor market,t5,3.0,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.4032218574037398,14.188376360442582
+paper's bounded design,normal,0.5,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.1537327514588167,18.15031095586486
+paper's bounded design,normal,0.9,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.176441511265119,14.659145739120538
+paper's bounded design,normal,1.5,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.2069194724560082,12.097235798216735
+paper's bounded design,normal,3.0,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.1946462210622508,7.331491395149596
+paper's bounded design,t5,0.5,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.1833738313203261,21.955789696163308
+paper's bounded design,t5,0.9,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.1798835689567475,11.005217111647818
+paper's bounded design,t5,1.5,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.2221427047820401,12.867283567449128
+paper's bounded design,t5,3.0,"ours, target from prior days","Ledoit-Wolf nonlinear, n + 120 days",1.147626339461923,7.146218311956614
+neutral: S&P 500 covariance,normal,0.5,"ours, target from prior days",oracle: ridge + targets,1.0329124105011724,9.142472132293872
+neutral: S&P 500 covariance,normal,0.9,"ours, target from prior days",oracle: ridge + targets,1.0587665335357854,5.813424842113145
+neutral: S&P 500 covariance,normal,1.5,"ours, target from prior days",oracle: ridge + targets,1.1117126479710289,9.217198032287252
+neutral: S&P 500 covariance,normal,3.0,"ours, target from prior days",oracle: ridge + targets,1.1283161437109093,8.090489055222644
+neutral: S&P 500 covariance,t5,0.5,"ours, target from prior days",oracle: ridge + targets,1.0464603686100267,11.308726475823839
+neutral: S&P 500 covariance,t5,0.9,"ours, target from prior days",oracle: ridge + targets,1.0734840353639392,6.656899862482917
+neutral: S&P 500 covariance,t5,1.5,"ours, target from prior days",oracle: ridge + targets,1.1041415675975714,7.0623744360141805
+neutral: S&P 500 covariance,t5,3.0,"ours, target from prior days",oracle: ridge + targets,1.1230465734060073,7.650802984091977
+one-factor market,normal,0.5,"ours, target from prior days",oracle: ridge + targets,1.0078245059419249,1.178087252969071
+one-factor market,normal,0.9,"ours, target from prior days",oracle: ridge + targets,0.9748501980481981,-2.3957724020218856
+one-factor market,normal,1.5,"ours, target from prior days",oracle: ridge + targets,0.9623859985417479,-2.8491081545116432
+one-factor market,normal,3.0,"ours, target from prior days",oracle: ridge + targets,0.9372694484170623,-3.3725713187963016
+one-factor market,t5,0.5,"ours, target from prior days",oracle: ridge + targets,1.012697148468103,1.3715353809727764
+one-factor market,t5,0.9,"ours, target from prior days",oracle: ridge + targets,0.9825505995678242,-2.097683996357275
+one-factor market,t5,1.5,"ours, target from prior days",oracle: ridge + targets,1.0077157473262361,0.3295910910714862
+one-factor market,t5,3.0,"ours, target from prior days",oracle: ridge + targets,0.9579558650121562,-2.4441402340126857
+paper's bounded design,normal,0.5,"ours, target from prior days",oracle: ridge + targets,1.0675950164539294,12.9190804203046
+paper's bounded design,normal,0.9,"ours, target from prior days",oracle: ridge + targets,1.1157422644019213,11.214549271223072
+paper's bounded design,normal,1.5,"ours, target from prior days",oracle: ridge + targets,1.174715698846245,11.650925090603295
+paper's bounded design,normal,3.0,"ours, target from prior days",oracle: ridge + targets,1.2765960294836967,11.925509122471592
+paper's bounded design,t5,0.5,"ours, target from prior days",oracle: ridge + targets,1.0777423182435952,13.04842139991801
+paper's bounded design,t5,0.9,"ours, target from prior days",oracle: ridge + targets,1.1303360908532958,8.736954035699126
+paper's bounded design,t5,1.5,"ours, target from prior days",oracle: ridge + targets,1.1984774165024061,11.617109449328302
+paper's bounded design,t5,3.0,"ours, target from prior days",oracle: ridge + targets,1.2281242979866545,12.401364926679982
+neutral: S&P 500 covariance,normal,0.5,"ours, target from prior days","paper: bona fide, 1/N",0.5571045768849046,-53.74515902426753
+neutral: S&P 500 covariance,normal,0.9,"ours, target from prior days","paper: bona fide, 1/N",0.30473513098797966,-74.85436881469789
+neutral: S&P 500 covariance,normal,1.5,"ours, target from prior days","paper: bona fide, 1/N",0.5015915067043604,-37.251269919575435
+neutral: S&P 500 covariance,normal,3.0,"ours, target from prior days","paper: bona fide, 1/N",0.6780418058945085,-21.69942244476688
+neutral: S&P 500 covariance,t5,0.5,"ours, target from prior days","paper: bona fide, 1/N",0.5579998813727504,-53.7780034973999
+neutral: S&P 500 covariance,t5,0.9,"ours, target from prior days","paper: bona fide, 1/N",0.3134060112907437,-61.81899813812173
+neutral: S&P 500 covariance,t5,1.5,"ours, target from prior days","paper: bona fide, 1/N",0.49557450329774816,-35.96987359690785
+neutral: S&P 500 covariance,t5,3.0,"ours, target from prior days","paper: bona fide, 1/N",0.6576445025180739,-23.39807885319905
+one-factor market,normal,0.5,"ours, target from prior days","paper: bona fide, 1/N",0.17891722554199904,-112.57788171127736
+one-factor market,normal,0.9,"ours, target from prior days","paper: bona fide, 1/N",0.05490882064059594,-139.92694191123766
+one-factor market,normal,1.5,"ours, target from prior days","paper: bona fide, 1/N",0.11250035007148212,-124.52989610382653
+one-factor market,normal,3.0,"ours, target from prior days","paper: bona fide, 1/N",0.13772903147980312,-98.3242059345455
+one-factor market,t5,0.5,"ours, target from prior days","paper: bona fide, 1/N",0.19113374057731689,-118.04219409662194
+one-factor market,t5,0.9,"ours, target from prior days","paper: bona fide, 1/N",0.05643155878657084,-134.4741033008424
+one-factor market,t5,1.5,"ours, target from prior days","paper: bona fide, 1/N",0.12421384675386911,-83.36330712743697
+one-factor market,t5,3.0,"ours, target from prior days","paper: bona fide, 1/N",0.1423151513862996,-101.14100249436123
+paper's bounded design,normal,0.5,"ours, target from prior days","paper: bona fide, 1/N",0.9876541081499868,-2.9007902217129273
+paper's bounded design,normal,0.9,"ours, target from prior days","paper: bona fide, 1/N",0.9335871001197528,-7.403254624286555
+paper's bounded design,normal,1.5,"ours, target from prior days","paper: bona fide, 1/N",1.0245829182415442,1.5855216405805943
+paper's bounded design,normal,3.0,"ours, target from prior days","paper: bona fide, 1/N",1.0801516181224415,2.965447577451248
+paper's bounded design,t5,0.5,"ours, target from prior days","paper: bona fide, 1/N",0.9999580677503309,-0.008111604576934403
+paper's bounded design,t5,0.9,"ours, target from prior days","paper: bona fide, 1/N",0.9239917684346654,-7.204261144056574
+paper's bounded design,t5,1.5,"ours, target from prior days","paper: bona fide, 1/N",1.026033997763401,1.4492804071343783
+paper's bounded design,t5,3.0,"ours, target from prior days","paper: bona fide, 1/N",1.0579718320382572,2.8007309437011583
+neutral: S&P 500 covariance,normal,0.5,"ours, target from prior days","paper: bona fide, target from prior days",0.6152884711143154,-47.950769349325114
+neutral: S&P 500 covariance,normal,0.9,"ours, target from prior days","paper: bona fide, target from prior days",0.3891288306039985,-61.249483979726214
+neutral: S&P 500 covariance,normal,1.5,"ours, target from prior days","paper: bona fide, target from prior days",0.5729122311770365,-30.11418376960416
+neutral: S&P 500 covariance,normal,3.0,"ours, target from prior days","paper: bona fide, target from prior days",0.7109018678950041,-19.25189225445748
+neutral: S&P 500 covariance,t5,0.5,"ours, target from prior days","paper: bona fide, target from prior days",0.6174972282394124,-47.67656780651487
+neutral: S&P 500 covariance,t5,0.9,"ours, target from prior days","paper: bona fide, target from prior days",0.4004679962664002,-51.35838383665494
+neutral: S&P 500 covariance,t5,1.5,"ours, target from prior days","paper: bona fide, target from prior days",0.5669683490869454,-29.023269692247244
+neutral: S&P 500 covariance,t5,3.0,"ours, target from prior days","paper: bona fide, target from prior days",0.6902982874675031,-20.957030790982802
+one-factor market,normal,0.5,"ours, target from prior days","paper: bona fide, target from prior days",0.18130261107399587,-112.92990717982916
+one-factor market,normal,0.9,"ours, target from prior days","paper: bona fide, target from prior days",0.05843205384998972,-141.96265188438952
+one-factor market,normal,1.5,"ours, target from prior days","paper: bona fide, target from prior days",0.11644310435485575,-123.62868398658779
+one-factor market,normal,3.0,"ours, target from prior days","paper: bona fide, target from prior days",0.14087496075075026,-97.88738755322672
+one-factor market,t5,0.5,"ours, target from prior days","paper: bona fide, target from prior days",0.1939741242616187,-117.55408231296205
+one-factor market,t5,0.9,"ours, target from prior days","paper: bona fide, target from prior days",0.060146922366721596,-136.5790473471668
+one-factor market,t5,1.5,"ours, target from prior days","paper: bona fide, target from prior days",0.12867782016419535,-82.60510301912151
+one-factor market,t5,3.0,"ours, target from prior days","paper: bona fide, target from prior days",0.14559760868939245,-100.26314777050779
+paper's bounded design,normal,0.5,"ours, target from prior days","paper: bona fide, target from prior days",0.9502251118394864,-10.489263643234676
+paper's bounded design,normal,0.9,"ours, target from prior days","paper: bona fide, target from prior days",0.886178802915894,-12.320409481518945
+paper's bounded design,normal,1.5,"ours, target from prior days","paper: bona fide, target from prior days",0.978705296925247,-1.44511513881007
+paper's bounded design,normal,3.0,"ours, target from prior days","paper: bona fide, target from prior days",1.0254097762157044,0.9678088415613554
+paper's bounded design,t5,0.5,"ours, target from prior days","paper: bona fide, target from prior days",0.8879197900898106,-18.2741820965813
+paper's bounded design,t5,0.9,"ours, target from prior days","paper: bona fide, target from prior days",0.8006067398853639,-19.929970317577865
+paper's bounded design,t5,1.5,"ours, target from prior days","paper: bona fide, target from prior days",0.8918845436836451,-6.628604502186454
+paper's bounded design,t5,3.0,"ours, target from prior days","paper: bona fide, target from prior days",0.9179921642727591,-4.414623090715378
