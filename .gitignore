@@ -8,3 +8,7 @@ data/sp500_close.csv
 # Raw backtest output of Study 3 (rebuilt by study3_sp500.py)
 results/study3_all.csv
 results/study2_log.txt
+
+# Raw daily returns of Study 5 (rebuilt by study5_ridge_multitarget.py sp500)
+results/study5_sp500_p*.npz
+.DS_Store

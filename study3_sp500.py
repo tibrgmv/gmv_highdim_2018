@@ -70,6 +70,21 @@ pd.set_option("display.width", 200)
 print(summ.round(3).to_string(index=False))
 summ.to_csv(f"{OUT}.csv", index=False)
 
+# The shrinkage intensity the bona fide estimator actually uses (first 100 portfolios, every fifth window)
+alpha = []
+for c in CS:
+    n = int(round(P / c))
+    a = []
+    for idx in draws[:100]:
+        r = Rv[:, idx]
+        for t in range(n, T, 5):
+            S = sample_cov(r[t - n:t])
+            a.append(bona_fide(S, n, Sinv=np.linalg.inv(S) if c < 1 else pinv(S))[1])
+    alpha.append({"c": c, "mean alpha": np.mean(a), "median alpha": np.median(a), "share negative": np.mean(np.array(a) < 0)})
+alpha = pd.DataFrame(alpha)
+print(alpha.round(3).to_string(index=False))
+alpha.to_csv(f"{OUT}_alpha.csv", index=False)
+
 ORDER = ("traditional", "Frahm-Memmel", "equal weights", "bona fide")
 os.makedirs("results/slides", exist_ok=True)
 

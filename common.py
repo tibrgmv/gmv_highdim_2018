@@ -225,3 +225,117 @@ def target_loss(Sigma, b=None):
     b = np.full(p, 1 / p) if b is None else b
     v = gmv_variance(Sigma)
     return (b @ Sigma @ b - v) / v
+
+
+# ----------------------------------------------------------------------------
+# Study 5: a ridge base and several targets
+# ----------------------------------------------------------------------------
+def make_sigma_market(p, rng):
+    """A one-factor market: Σ = ββ' + diag(d), betas U(0.5, 1.5), idiosyncratic variances U(1, 4).
+    Unlike the Haar designs, the top eigenvector is close to equal weights (the market), the largest eigenvalue
+    grows like p, and stocks differ in risk, so the equal-weight target is far from the GMV portfolio."""
+    beta, d = rng.uniform(0.5, 1.5, p), rng.uniform(1, 4, p)
+    Sigma = np.outer(beta, beta) + np.diag(d)
+    lam, V = np.linalg.eigh(Sigma)
+    return Sigma, (V * np.sqrt(lam)) @ V.T, (V / np.sqrt(lam)) @ V.T
+
+
+def inverse_variance(var):
+    """Inverse-variance weights from a vector of variances."""
+    w = 1 / var
+    return w / w.sum()
+
+
+def ledoit_wolf(Y):
+    """Ledoit and Wolf (2004) linear shrinkage of the covariance matrix towards a scaled identity."""
+    n, p = Y.shape
+    Yc = Y - Y.mean(axis=0)
+    S = Yc.T @ Yc / n
+    mu = np.trace(S) / p
+    d2 = ((S - mu * np.eye(p)) ** 2).sum() / p
+    b2 = ((Yc ** 2).sum(axis=1) ** 2).sum() / n ** 2 / p - (S ** 2).sum() / n / p
+    k = min(max(b2, 0), d2) / d2
+    return k * mu * np.eye(p) + (1 - k) * S
+
+
+def multi_target(S, n, targets, Sinv=None):
+    """Shrinkage of the sample GMV portfolio towards several targets at once: w = w_S + Σ_k β_k (b_k - w_S).
+    From the proofs of Theorems 2.1 and 2.2: w_S'Σw_S ≈ s σ², w_S'Σb ≈ σ² for every target, b_k'Σb_j ≈ b_k'S b_j,
+    with s = 1/(1-c) (c < 1) or c²/(c-1) (c > 1). Hence β = σ²(s-1) M⁻¹1, M = B - 2σ² + sσ².
+    With one target this is exactly the paper's bona fide estimator (2.29)-(2.31)."""
+    p = S.shape[0]
+    c = p / n
+    Sinv = inverse(S) if Sinv is None else Sinv
+    w = gmv(Sinv)
+    if c < 1:
+        s, sig2 = 1 / (1 - c), 1 / ((1 - c) * Sinv.sum())
+    else:
+        s, sig2 = c * c / (c - 1), 1 / (c * (c - 1) * Sinv.sum())
+    T = np.atleast_2d(targets)
+    M = T @ S @ T.T - 2 * sig2 + s * sig2
+    beta = sig2 * (s - 1) * np.linalg.solve(M, np.ones(len(T)))
+    return w + beta @ (T - w)
+
+
+ETA_GRID = np.logspace(-3, 2, 41)       # ridge η relative to the average eigenvalue tr(S)/p
+
+
+def ridge_terms(S, n, targets, etas=ETA_GRID):
+    """For each η: the ridge GMV weights w_η = (S+ηI)⁻¹1 / 1'(S+ηI)⁻¹1, and random-matrix estimates of their
+    out-of-sample variance w_η'Σw_η and of w_η'Σb_k, valid for c < 1 and c > 1. Derivation (deterministic
+    equivalents, (S+ηI)⁻¹ ≍ (xΣ+ηI)⁻¹ with x = 1 - c + cη m, m = tr(S+ηI)⁻¹/p):
+        1'AΣb  ≈ (1 - η 1'Ab) / x
+        1'AΣA1 ≈ (1'A1 - η 1'A²1) / D / (1 - c(1 - 2ηm + η² q₂)),
+    with A = (S+ηI)⁻¹, a₂ = tr A²/p, x' = cm - cηa₂, D = x - ηx' = 1 - c + cη²a₂, q₂ = (x a₂ - x'm)/D.
+    The data are demeaned, so we use n - 1 observations. Returns η, weights (E x p), w'Σw (E), w'Σb (E x K), B (K x K)."""
+    p = S.shape[0]
+    ne = n - 1
+    St = S * n / ne
+    c = p / ne
+    l, V = np.linalg.eigh(St)
+    l = np.clip(l, 0, None)
+    eta = etas * l.mean()
+    o = V.sum(axis=0)                                    # V'1
+    R = 1 / (l[None, :] + eta[:, None])                  # E x p
+    a1 = (o ** 2 * R).sum(axis=1)
+    W = (R * o) @ V.T / a1[:, None]
+    m, a2, a1sq = R.mean(axis=1), (R ** 2).mean(axis=1), (o ** 2 * R ** 2).sum(axis=1)
+    x = 1 - c + c * eta * m
+    xp = c * m - c * eta * a2
+    D = x - eta * xp
+    q2 = (x * a2 - xp * m) / D
+    with np.errstate(divide="ignore", invalid="ignore"):
+        vww = (a1 - eta * a1sq) / D / (1 - c * (1 - 2 * eta * m + eta ** 2 * q2)) / a1 ** 2
+    T = np.atleast_2d(targets) if len(targets) else np.zeros((0, p))
+    ab = (R * o) @ (T @ V).T                             # E x K: 1'A b_k
+    vwb = (1 - eta[:, None] * ab) / x[:, None] / a1[:, None]
+    B = T @ St @ T.T
+    return eta, W, vww, vwb, B
+
+
+def best_combination(W, vww, vwb, B, T):
+    """For each η the best β (w = w_η + Σ β_k (b_k - w_η)) and its loss; returns the weights at the best η."""
+    best = (np.inf, None, None, None)
+    for e in range(len(vww)):
+        if not np.isfinite(vww[e]) or vww[e] <= 0:
+            continue
+        g = vww[e] - vwb[e]
+        M = B - vwb[e][:, None] - vwb[e][None, :] + vww[e]
+        beta = np.linalg.lstsq(M, g, rcond=1e-12)[0] if len(g) else g
+        loss = vww[e] - g @ beta
+        if loss < best[0]:
+            best = (loss, e, beta, W[e] + beta @ (T - W[e]) if len(g) else W[e])
+    return best
+
+
+def ridge_multi_target(S, n, targets=(), Sigma=None, etas=ETA_GRID):
+    """Our estimator: a ridge GMV portfolio shrunk towards several targets; η and β minimise the random-matrix
+    estimate of the out-of-sample variance. With Sigma given, the oracle: the same family, chosen with the true Σ.
+    Returns weights and (η index, β)."""
+    eta, W, vww, vwb, B = ridge_terms(S, n, targets, etas)
+    T = np.atleast_2d(targets) if len(targets) else np.zeros((0, S.shape[0]))
+    if Sigma is not None:
+        vww = np.einsum("ep,pq,eq->e", W, Sigma, W)
+        vwb, B = W @ Sigma @ T.T, T @ Sigma @ T.T
+    loss, e, beta, w = best_combination(W, vww, vwb, B, T)
+    return w, (e, beta)

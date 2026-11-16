@@ -1,0 +1,97 @@
+design,returns,c,estimator,mean,median
+one-factor market,normal,0.5,Ledoit-Wolf GMV,0.7363820614724819,0.7244075039151023
+one-factor market,normal,0.5,"multi-target, S⁻¹ / S⁺",0.6794586834814816,0.6828052896128756
+one-factor market,normal,0.5,oracle: ridge + targets,0.1533385780750209,0.15417925429269594
+one-factor market,normal,0.5,paper: bona fide (1/N),0.8709019892597766,0.8505591955785123
+one-factor market,normal,0.5,ridge + 1/N,0.19132396041226155,0.18961063537143236
+one-factor market,normal,0.5,ridge + 1/N + inv. variance,0.16271852313910784,0.1632123888112989
+one-factor market,normal,0.9,Ledoit-Wolf GMV,1.2625280378812542,1.262865827478647
+one-factor market,normal,0.9,"multi-target, S⁻¹ / S⁺",1.7899218410177336,1.740745750801464
+one-factor market,normal,0.9,oracle: ridge + targets,0.21080273347356704,0.2090089165715221
+one-factor market,normal,0.9,paper: bona fide (1/N),3.861476851980082,3.756386557348317
+one-factor market,normal,0.9,ridge + 1/N,0.27280362973863065,0.27122091301862394
+one-factor market,normal,0.9,ridge + 1/N + inv. variance,0.23070663976295488,0.22747494455615444
+one-factor market,normal,1.5,Ledoit-Wolf GMV,1.050421964538118,1.0520974350098946
+one-factor market,normal,1.5,"multi-target, S⁻¹ / S⁺",1.397671366677581,1.3571189236599204
+one-factor market,normal,1.5,oracle: ridge + targets,0.2803775866014474,0.27736528273770056
+one-factor market,normal,1.5,paper: bona fide (1/N),2.6070882029106373,2.5882260960367596
+one-factor market,normal,1.5,ridge + 1/N,0.3820344768089939,0.3733431691202417
+one-factor market,normal,1.5,ridge + 1/N + inv. variance,0.316622492845447,0.30825486751443953
+one-factor market,normal,3.0,Ledoit-Wolf GMV,1.0481787756273089,1.0325614278818889
+one-factor market,normal,3.0,"multi-target, S⁻¹ / S⁺",1.976409750245854,1.9047992838319399
+one-factor market,normal,3.0,oracle: ridge + targets,0.43575421114046764,0.43475356806777504
+one-factor market,normal,3.0,paper: bona fide (1/N),3.510402103777216,3.4672521164112005
+one-factor market,normal,3.0,ridge + 1/N,0.6924354547712249,0.6449402052675195
+one-factor market,normal,3.0,ridge + 1/N + inv. variance,0.5510645319087876,0.5206877780958382
+one-factor market,t5,0.5,Ledoit-Wolf GMV,0.709917248158827,0.7076804489365124
+one-factor market,t5,0.5,"multi-target, S⁻¹ / S⁺",0.6222917131037954,0.6131432260302114
+one-factor market,t5,0.5,oracle: ridge + targets,0.1369016167633877,0.13591104004439641
+one-factor market,t5,0.5,paper: bona fide (1/N),0.8704504852338718,0.8576079465499745
+one-factor market,t5,0.5,ridge + 1/N,0.18957620275824966,0.18553172244245764
+one-factor market,t5,0.5,ridge + 1/N + inv. variance,0.14589845037479351,0.14523712562403773
+one-factor market,t5,0.9,Ledoit-Wolf GMV,1.2022060655510396,1.1858936048177828
+one-factor market,t5,0.9,"multi-target, S⁻¹ / S⁺",1.4760593312757624,1.4295012089046153
+one-factor market,t5,0.9,oracle: ridge + targets,0.1827544618451277,0.1826159818593015
+one-factor market,t5,0.9,paper: bona fide (1/N),4.155639986839538,4.116024136953136
+one-factor market,t5,0.9,ridge + 1/N,0.2675937584620161,0.26114904127895494
+one-factor market,t5,0.9,ridge + 1/N + inv. variance,0.2043995279408165,0.2008210564645838
+one-factor market,t5,1.5,Ledoit-Wolf GMV,1.0602620765855977,1.0426147489455309
+one-factor market,t5,1.5,"multi-target, S⁻¹ / S⁺",1.1898011312498706,1.1568419875843232
+one-factor market,t5,1.5,oracle: ridge + targets,0.24144825297076777,0.2438646787421174
+one-factor market,t5,1.5,paper: bona fide (1/N),2.841194245320677,2.84778523791785
+one-factor market,t5,1.5,ridge + 1/N,0.38743007397868695,0.36216535452447984
+one-factor market,t5,1.5,ridge + 1/N + inv. variance,0.29467432545995725,0.2725048313781243
+one-factor market,t5,3.0,Ledoit-Wolf GMV,1.0832596821866216,1.0738445418443225
+one-factor market,t5,3.0,"multi-target, S⁻¹ / S⁺",1.6919272814398627,1.6329722479719069
+one-factor market,t5,3.0,oracle: ridge + targets,0.3841523343824375,0.37502474771752425
+one-factor market,t5,3.0,paper: bona fide (1/N),3.8888433175380754,3.8643820320101705
+one-factor market,t5,3.0,ridge + 1/N,0.6748186318132933,0.6417113903887477
+one-factor market,t5,3.0,ridge + 1/N + inv. variance,0.4967503424999587,0.4785607823311784
+paper's bounded design,normal,0.5,Ledoit-Wolf GMV,0.257456399706908,0.25743592608988675
+paper's bounded design,normal,0.5,"multi-target, S⁻¹ / S⁺",0.2555621425333846,0.25313323232474155
+paper's bounded design,normal,0.5,oracle: ridge + targets,0.23488898487678844,0.23442391153179865
+paper's bounded design,normal,0.5,paper: bona fide (1/N),0.25276550362095435,0.24958443093326677
+paper's bounded design,normal,0.5,ridge + 1/N,0.2477215048611811,0.24680167712864698
+paper's bounded design,normal,0.5,ridge + 1/N + inv. variance,0.2509780073191206,0.2502480419009514
+paper's bounded design,normal,0.9,Ledoit-Wolf GMV,0.28528673182882686,0.284726305033426
+paper's bounded design,normal,0.9,"multi-target, S⁻¹ / S⁺",0.34284486107725853,0.328341668893194
+paper's bounded design,normal,0.9,oracle: ridge + targets,0.2753266153169984,0.2750717021280251
+paper's bounded design,normal,0.9,paper: bona fide (1/N),0.3387545281487467,0.3245707309786089
+paper's bounded design,normal,0.9,ridge + 1/N,0.30855521686751003,0.2959323126049693
+paper's bounded design,normal,0.9,ridge + 1/N + inv. variance,0.3138277839057805,0.3016457079546906
+paper's bounded design,normal,1.5,Ledoit-Wolf GMV,0.3021524098676491,0.30153569182401124
+paper's bounded design,normal,1.5,"multi-target, S⁻¹ / S⁺",0.35338362565081516,0.34420567040116457
+paper's bounded design,normal,1.5,oracle: ridge + targets,0.2964082360300103,0.2968376601156474
+paper's bounded design,normal,1.5,paper: bona fide (1/N),0.34428226603654044,0.33251519292698417
+paper's bounded design,normal,1.5,ridge + 1/N,0.34295546786979086,0.31970448779925753
+paper's bounded design,normal,1.5,ridge + 1/N + inv. variance,0.35366318473540803,0.33511429462880427
+paper's bounded design,normal,3.0,Ledoit-Wolf GMV,0.3164465583464517,0.31614881853128585
+paper's bounded design,normal,3.0,"multi-target, S⁻¹ / S⁺",0.3798412269248255,0.3608578145492301
+paper's bounded design,normal,3.0,oracle: ridge + targets,0.31200941582735214,0.3122805649785547
+paper's bounded design,normal,3.0,paper: bona fide (1/N),0.3634155237471303,0.3429760434376533
+paper's bounded design,normal,3.0,ridge + 1/N,0.3805602288643605,0.35856845231912393
+paper's bounded design,normal,3.0,ridge + 1/N + inv. variance,0.3991702984587123,0.37719170035500016
+paper's bounded design,t5,0.5,Ledoit-Wolf GMV,0.2524241845942569,0.2519094964150739
+paper's bounded design,t5,0.5,"multi-target, S⁻¹ / S⁺",0.24938989876741582,0.24879984836250155
+paper's bounded design,t5,0.5,oracle: ridge + targets,0.23076495175814643,0.23127053860995936
+paper's bounded design,t5,0.5,paper: bona fide (1/N),0.24726767340339106,0.2458302884858216
+paper's bounded design,t5,0.5,ridge + 1/N,0.24426464923481783,0.24425309396343045
+paper's bounded design,t5,0.5,ridge + 1/N + inv. variance,0.2463515763434799,0.24531526537861995
+paper's bounded design,t5,0.9,Ledoit-Wolf GMV,0.2788668217403251,0.27818359426179484
+paper's bounded design,t5,0.9,"multi-target, S⁻¹ / S⁺",0.33032941017654693,0.3201941737539554
+paper's bounded design,t5,0.9,oracle: ridge + targets,0.27097527125054705,0.2699807576257018
+paper's bounded design,t5,0.9,paper: bona fide (1/N),0.3260132661885725,0.314337201990208
+paper's bounded design,t5,0.9,ridge + 1/N,0.29996491754326277,0.2904836330069185
+paper's bounded design,t5,0.9,ridge + 1/N + inv. variance,0.30428263860306987,0.29415215362168845
+paper's bounded design,t5,1.5,Ledoit-Wolf GMV,0.29260676330800817,0.29198316227176957
+paper's bounded design,t5,1.5,"multi-target, S⁻¹ / S⁺",0.34379801647366437,0.3399050111188435
+paper's bounded design,t5,1.5,oracle: ridge + targets,0.2876308521810411,0.2885901117043369
+paper's bounded design,t5,1.5,paper: bona fide (1/N),0.3347806430136948,0.32788927346203844
+paper's bounded design,t5,1.5,ridge + 1/N,0.33118223808682545,0.31093050213624296
+paper's bounded design,t5,1.5,ridge + 1/N + inv. variance,0.34113219942607137,0.32465069814905834
+paper's bounded design,t5,3.0,Ledoit-Wolf GMV,0.30507042976328375,0.30389827739136266
+paper's bounded design,t5,3.0,"multi-target, S⁻¹ / S⁺",0.3732302838816405,0.35974558334290097
+paper's bounded design,t5,3.0,oracle: ridge + targets,0.29959065607763125,0.3009342102012421
+paper's bounded design,t5,3.0,paper: bona fide (1/N),0.35961123530621897,0.3415973557429704
+paper's bounded design,t5,3.0,ridge + 1/N,0.35972505749380335,0.3301237313279465
+paper's bounded design,t5,3.0,ridge + 1/N + inv. variance,0.3773562395138707,0.3627298626950318

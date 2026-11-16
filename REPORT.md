@@ -75,6 +75,11 @@ python study2_simulations.py run normal unbounded
 python study2_simulations.py run t5 unbounded
 python study2_simulations.py plot
 python study3_sp500.py                         # ~5 min
+python study5_ridge_multitarget.py validate    # ~5 s
+python study5_ridge_multitarget.py sim         # ~3 min
+python study5_ridge_multitarget.py sp500 54 200    # ~6 min (parallel)
+python study5_ridge_multitarget.py sp500 150 50    # ~10 min
+python study5_ridge_multitarget.py plot
 ```
 
 Every study writes a table (`results/studyN.csv`), an overview figure (`results/studyN.png`), and one-chart
@@ -173,11 +178,79 @@ by (4.1). We added the equal-weight portfolio and counted, portfolio by portfoli
   54%); only at c = 0.5 does shrinkage win clearly (98%).
 - On the Sharpe ratio equal weights win at every c: shrinkage is higher in only 26–35% of portfolios
   (median daily Sharpe 0.11–0.13 for equal weights against 0.09–0.11).
-- This is what the formula predicts for a short window: when c is large, α is small and the shrinkage
-  portfolio is mostly the target. With one year of data in a calm market the remaining weight on the data
-  does not pay.
+- The shrinkage portfolio is not simply the target in disguise. The mean intensity α the estimator uses is
+  0.54, 0.18, 0.46 and 0.62 at c = 0.5, 0.9, 1.5 and 2 (`results/study3_alpha.csv`): small only at c = 0.9,
+  where the factor 1 − c pushes it down. At c = 1.5 and 2 about 50–60% of the weight is on the S⁺ portfolio,
+  and the mixture merely ties with 1/N. At c = 0.9 the sample GMV portfolio rests on n − p = 6 spare
+  observations; its loss is above the asymptotic c/(1 − c) = 9 that the formula assumes, so even α ≈ 0.18
+  puts too much weight on it. The weak base portfolio, not the idea of a target, is what costs: Study 5.
 
 ![Study 3: the paper's Figures 15 and 16, with equal weights added](results/study3.png)
+
+## Study 5 — Our extension: a ridge base and several targets
+**Why:** Studies 1 and 3 show where the paper's estimator breaks. For c > 1 its intensity is biased because S⁺
+does not behave like S*; near c = 1 the sample GMV portfolio is so noisy that 1/N beats the mixture. Both
+problems sit in the *base* portfolio, not in the idea of shrinking to a target. The paper also leaves the
+choice of target open (Section 2.4) and only tries 1/N.
+
+**What we did:** we replace the base S⁻¹1/1'S⁻¹1 (or S⁺) by the ridge GMV portfolio
+w_η = (S+ηI)⁻¹1 / 1'(S+ηI)⁻¹1 and mix it with several targets at once:
+w = w_η + Σ_k β_k (b_k − w_η), with b = 1/N and inverse-variance weights. η and β minimise the out-of-sample
+variance, which we estimate from the data only. With the deterministic equivalent (S+ηI)⁻¹ ≍ (xΣ+ηI)⁻¹,
+x = 1 − c + cη·m, m = tr(S+ηI)⁻¹/p (the same random-matrix tool the paper uses in its proofs), and A = (S+ηI)⁻¹:
+
+- 1'AΣb ≈ (1 − η·1'Ab) / x
+- 1'AΣA1 ≈ (1'A1 − η·1'A²1) / D / (1 − c(1 − 2ηm + η²q₂)), with a₂ = tr A²/p, x' = cm − cηa₂,
+  D = 1 − c + cη²a₂, q₂ = (x·a₂ − x'm)/D
+- b_k'Σb_j ≈ b_k'S b_j
+
+Every term is a sample quantity, for c < 1 and c > 1 alike, so no pseudo-inverse is needed. Given these, the
+best β for each η solves a K×K linear system, and we pick η from a grid of 41 values. As η → 0 with c < 1 and
+one target, this is exactly the paper's estimator; the intermediate step, several targets with the paper's
+S⁻¹/S⁺ base, is reported too. The inverse-variance target is estimated on data *before* the estimation window
+(120 days, or an independent sample in simulations), since the theory needs a target independent of the window.
+Code: `ridge_terms`, `ridge_multi_target`, `multi_target` in `common.py`; `study5_ridge_multitarget.py`.
+
+We checked the estimate first, then compared seven estimators: in simulation (p = 200, 100 samples, c up to 3;
+the paper's bounded design and a one-factor market with betas U(0.5, 1.5) and idiosyncratic variances U(1, 4),
+normal and t₅ returns), and on the 2013–2018 S&P 500 sample (470 stocks with a full history; random portfolios
+of p = 54 (200 of them) and p = 150 (50); one common out-of-sample period for every c, 1030 and 838 days).
+Significance is tested over time, the only independent dimension: the day-by-day difference in squared
+deviations, averaged over portfolios, with Newey-West errors.
+
+**What it showed:**
+- **The variance estimate is right, also for c > 1.** Averaged over samples it lies within 3–8% of the true
+  out-of-sample variance across the whole η grid, in both designs, at c = 0.5 and c = 2. For comparison, the
+  paper's S⁺ estimate of R_b is about half the true value (Study 1). Its spread is large for small η, as for
+  any estimate of the variance of a noisy portfolio.
+- **Market factor (simulation): 2–16 times less loss than the paper and Ledoit-Wolf, close to the oracle.**
+  Median relative loss at c = 0.5, 0.9, 1.5, 3: ours 0.16, 0.23, 0.31, 0.52; oracle 0.15, 0.21, 0.28, 0.44;
+  paper 0.85, 3.76, 2.59, 3.47; Ledoit-Wolf 0.72, 1.26, 1.05, 1.03. Same picture with t₅ returns. The second
+  target helps here: ridge with 1/N alone gives 0.19, 0.27, 0.37, 0.65.
+- **The paper's own (Haar) design: no gain.** All estimators are within 0.23–0.38; Ledoit-Wolf is best,
+  and for c ≥ 1.5 ours (0.33–0.38) is no better than the paper's (0.33–0.34), and worse than ridge with 1/N
+  alone. In this design every stock has the same variance and the identity is the natural target, so the extra
+  target adds only estimation noise, and picking η on a noisy curve costs about 20% over the oracle.
+- **S&P 500, p = 150: ours is best or tied at every c**, with a median daily variance of 3.9, 4.1, 4.3 and
+  4.2 ×10⁻⁵ at c = 0.5, 0.9, 1.5, 2, against 4.5–4.7 for Ledoit-Wolf (t = −3.3 to −6.6), 4.9–6.9 for the paper
+  (t ≤ −8.4) and 6.9 for 1/N. Against the paper the variance is 21–41% lower.
+- **S&P 500, p = 54: ours wins at c = 0.5 (4.51 against 4.87 for Ledoit-Wolf, t = −6.1), ties Ledoit-Wolf at
+  c = 0.9 (5.12 against 5.10, t = 0.3), and loses to it at c = 1.5 and 2 (t = 3.0 and 3.7)**, where the
+  estimation window has only 36 and 27 days and the random-matrix estimates are poor. It beats the paper's
+  estimator (by 13–38%, t ≤ −6.8) and 1/N at every c.
+- **Turnover** falls from 1.0–1.5 per day for the paper's estimator at c ≥ 0.9 to 0.2–0.6, close to
+  Ledoit-Wolf (0.2–0.4).
+- **Most of the gain comes from the ridge base**; the inverse-variance target adds a further 2–4% on real data
+  for p = 54, little for p = 150, and helps most in the market simulation.
+
+**Limits:** the estimate of the variance is derived, not proven here (we validated it by simulation only); the
+choice of η on a noisy estimated curve leaves a gap to the oracle; the S&P 500 sample is one 2013–2018 period
+of a bull market with survivorship bias; no transaction costs. Bodnar, Parolya and Thorsen (JMLR 2024) study a
+ridge base with one target; several targets and the comparison on these data are what we add.
+
+![Study 5: the estimated loss tracks the true one](results/study5_validation.png)
+![Study 5: simulation](results/study5_sim.png)
+![Study 5: S&P 500, p = 150](results/study5_sp500_p150.png)
 
 ---
 
@@ -193,15 +266,16 @@ by (4.1). We added the equal-weight portfolio and counted, portfolio by portfoli
 | Ranking robust to heavy tails and a factor model | Reproduces (Study 2) |
 | On S&P 500, shrinkage beats Frahm-Memmel and traditional | Reproduces (Study 3) |
 | Shrinkage improves on simple strategies in practice | Not shown by the paper; equal weights do as well or better for c ≥ 0.9 (Study 3) |
+| *Our extension:* ridge base + several targets | Beats the paper's estimator at every c on S&P 500 (13–41% lower variance) and Ledoit-Wolf for p = 150; loses to Ledoit-Wolf for p = 54 at c ≥ 1.5 (Study 5) |
 
 ## Next
 
-The replication suggests three improvements to test: (1) an estimator for c > 1 that removes the bias of S⁺,
-for example a regularised inverse whose limit is known from random matrix theory; (2) shrinking towards
-several targets at once (equal weights, the previous period's weights, a factor portfolio), for which the
-same theory gives the optimal weights from a small linear system; (3) a longer test on the full 2013–2018
-sample, with the comparisons the paper leaves out: equal weights, Ledoit-Wolf covariance shrinkage, a
-no-short-sale constraint, and turnover.
+Study 5 covers the first two ideas of the replication (a regularised base for c > 1, several targets) and part
+of the third (the 2013–2018 sample, Ledoit-Wolf, turnover). What is left: (1) a proof of the variance estimate
+of Study 5 and a less noisy choice of η (for example smoothing the estimated curve, or a closed-form η); (2)
+better estimates for short windows (n < 40), where Ledoit-Wolf still wins; (3) other targets: the previous
+period's weights, a factor-model GMV portfolio; (4) a no-short-sale constraint and transaction costs; (5) a
+sample without survivorship bias and outside the 2013–2018 bull market.
 
 ## Files
 
@@ -210,6 +284,7 @@ no-short-sale constraint, and turnover.
 | `common.py` | estimators, covariance designs, theory formulas, chart style |
 | `fetch_sp500.py` | downloads the S&P 500 data and builds the returns in the paper's window |
 | `study0_theory.py` … `study3_sp500.py` | one study each, as above |
+| `study5_ridge_multitarget.py` | our extension: ridge base and several targets (validation, simulation, S&P 500) |
 | `results/` | tables (`.csv`), overview figures (`.png`), raw simulation output (`.npz`) |
 | `results/slides/` | one chart per slide, for the presentation |
 | `fonts/` | Caladea and Caveat (SIL Open Font License), used by the charts |
