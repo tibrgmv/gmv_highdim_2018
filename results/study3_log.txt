@@ -1,0 +1,20 @@
+471 stocks, T = 230 days (the paper: 417 stocks, T = 230)
+c = 0.5 done
+c = 0.9 done
+c = 1.5 done
+c = 2.0 done
+  c     estimator  median variance (x1e-5)  median Sharpe  bona fide has lower variance (share)  bona fide has higher Sharpe (share)
+0.5  Frahm-Memmel                    5.126          0.092                                 0.997                                0.873
+0.5     bona fide                    4.658          0.109                                   NaN                                  NaN
+0.5 equal weights                    5.708          0.128                                 0.978                                0.347
+0.5   traditional                    6.710          0.064                                 1.000                                0.929
+0.9  Frahm-Memmel                   22.675          0.037                                 1.000                                0.950
+0.9     bona fide                    6.401          0.101                                   NaN                                  NaN
+0.9 equal weights                    5.400          0.120                                 0.054                                0.330
+0.9   traditional                   39.816          0.020                                 1.000                                0.949
+1.5     bona fide                    5.982          0.101                                   NaN                                  NaN
+1.5 equal weights                    5.962          0.128                                 0.477                                0.265
+1.5   traditional                   10.525          0.057                                 1.000                                0.947
+2.0     bona fide                    6.084          0.089                                   NaN                                  NaN
+2.0 equal weights                    6.122          0.111                                 0.540                                0.265
+2.0   traditional                    7.845          0.069                                 1.000                                0.916

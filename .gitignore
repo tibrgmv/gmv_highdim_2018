@@ -1,0 +1,10 @@
+__pycache__/
+
+# Downloaded and derived data: rebuilt by fetch_sp500.py (about 30 MB).
+# The returns in the paper's window are small and stay in the repository.
+data/all_stocks_5yr.csv
+data/sp500_close.csv
+
+# Raw backtest output of Study 3 (rebuilt by study3_sp500.py)
+results/study3_all.csv
+results/study2_log.txt
