@@ -43,6 +43,12 @@ an earlier date. Both samples keep only stocks that traded through the whole win
 survivorship bias. We use simple returns. The largest absolute daily return is 33.5% (Incyte), a genuine
 price move; no stock splits occur in the window.
 
+**Kenneth French portfolios (Study 6).** Daily value-weighted returns of the 100 size × book-to-market
+portfolios (95 complete series, July 1963 – September 2026) and of the 49 industry portfolios (March 1971 –
+September 2026), with the daily risk-free rate, from the Kenneth French data library (`fetch_french.py`,
+downloaded 16 November 2026; what was kept and why is in `data/french_info.txt`). They are built from CRSP,
+which keeps delisted firms, so they have no survivorship bias.
+
 ## Method
 
 All estimators are in `common.py`, written from the paper's equations:
@@ -80,7 +86,15 @@ python study5_ridge_multitarget.py sim         # ~5 min
 python study5_ridge_multitarget.py sp500 54 200    # ~10 min (parallel)
 python study5_ridge_multitarget.py sp500 150 100   # ~15 min
 python study5_ridge_multitarget.py plot
+python fetch_french.py                         # Study 6 data, Kenneth French library (about 16 MB download)
+python study6_levers.py check                  # ~5 s
+python study6_levers.py run ff100              # ~30 s (parallel)
+python study6_levers.py run ind49              # ~10 s
+python study6_levers.py run sp500              # ~8 min, 100 portfolios
+python study6_levers.py weekly                 # ~20 s
+python study6_levers.py plot                   # ~2 min (bootstrap)
 python tests/test_study5.py                   # ~1 s
+python tests/test_study6.py                   # ~2 s
 ```
 
 Every study writes a table (`results/studyN.csv`), an overview figure (`results/studyN.png`), and one-chart
@@ -324,6 +338,187 @@ short-sale constraint.
 ![Study 5: simulation, three designs, same window](results/study5_sim.png)
 ![Study 5: S&P 500, ratio of variances with 95% intervals, both regimes](results/study5_sp500.png)
 
+## Study 6 — Which lever matters: the estimator, the history, or the volatility
+**Why:** the paper studies one lever, the estimator, at a fixed c = p/n. A practitioner has two more: how much
+history to use, and whether to follow changing volatility. Study 5 hinted that more data can matter more than a
+cleverer formula. Studies 3 and 5 also rest on one five-year bull market with survivorship bias. So we measure
+all three levers side by side, on long data without survivorship bias that include several crises.
+
+**In plain words:**
+- **From the textbook start (the sample covariance of the last year), the estimator and the history are the
+  big levers.** On the 100 size and book-to-market portfolios, switching to a shrinkage estimator lowers the
+  variance by 21%, and a better history by 20%. Following daily volatility gives 12%, with a wide
+  interval. All three together give 27%. These gains appear in every subperiod and in the 2008–2009 and 2020
+  crises.
+- **Once you use a good shrinkage estimator, little is left.** Starting from Ledoit-Wolf nonlinear on one year,
+  the best history adds 7% and volatility scaling 4% (not significant). All three together add 7%, and no lever
+  is reliably better in any crisis.
+- **The history matters a lot only for weak estimators.** The sample covariance and the paper's estimator need
+  windows of two years or more. For the shrinkage estimators, anything from three months to four years gives
+  nearly the same risk.
+- **Volatility scaling (RiskMetrics) is a poor lever.** It helps a little on the 100 portfolios, hurts on the
+  49 industries, and multiplies turnover by 1.5–2.9. At 25 basis points of cost it turns a Sharpe ratio of
+  0.74 into −0.03. A slower version (half-life 60 days) is better, but still small.
+- **The rule "use the window with the lowest risk over the past year" is safe but not magic.** From the
+  textbook start it captures most of the best gain (24% against the ex-post best 27%). It does not beat
+  Ledoit-Wolf nonlinear with a fixed year of data (4% [−1, 9]).
+
+**What is new:** the comparison of the three levers on one footing, on 57 years of survivorship-free data, with
+crises shown separately. Also a rule that chooses the history and the volatility setting from past data only.
+
+**What we did:**
+1. *Data* (`fetch_french.py`, `data/french_info.txt`). Kenneth French's daily value-weighted returns, built from
+   CRSP, which keeps delisted firms. We downloaded them on 16 November 2026, from the CRSP 202609 database;
+   the last day is 30 September 2026.
+   - *100 size × book-to-market portfolios*, the main set. They start on 1 July 1963, when Compustat coverage
+     begins. Five portfolios still have gaps after that date, so we drop them (ME7 BM10, ME9 BM10, ME10 BM8,
+     ME10 BM9 and BIG HiBM, extreme corners that are empty in some years; BIG HiBM is empty until the end of
+     the sample). That leaves p = 95.
+   - *49 industries*, all complete from 12 March 1971.
+   - *The S&P 500 stocks of Studies 3 and 5*: 100 random portfolios of p = 150, 2013–2018, with
+     survivorship bias.
+2. *Design* (`study6_levers.py`):
+   - *Rebalancing and evaluation.* Rebalance every 21 trading days. Between rebalances the weights drift with
+     returns, and returns are evaluated daily. All 118 configurations and 7 rules share one evaluation period
+     per data set. For the 100 portfolios it runs from 13 May 1969 to 30 September 2026 (14,469 days); for the
+     industries, from 7 December 1976. It starts after the longest window, the volatility warm-up
+     (63 + 126 days) and the rule's one-year look-back.
+   - *Lever 1, the estimator:* 1/N; inverse variance; the sample covariance (pseudo-inverse when n ≤ p); the
+     paper's bona fide estimator; BPT 2024; Ledoit-Wolf linear; Ledoit-Wolf nonlinear (the implementations of
+     Studies 3 and 5).
+   - *Lever 2, the history:* windows of 63, 126, 252, 504 and 1008 days. For the three covariance-matrix
+     estimators we add exponentially weighted estimates with half-lives of 63, 126 and 252 days over the last
+     1008 days. For nonlinear shrinkage, the effective sample size takes the place of n.
+   - *Lever 3, volatility:* none, or EWMA devolatilisation per asset. σ_t is computed from returns up to t−1,
+     with RiskMetrics λ = 0.94, and a half-life of 60 days as a robustness check. The correlation structure is
+     estimated on z = r/σ, and the forecast is Σ_t = D_t C D_t.
+   - *The two weight estimators (the paper's and BPT 2024)* use the exact transformation: the GMV of D C D is
+     w = D⁻¹v, where v minimises v'Cv subject to a'v = 1, a = D⁻¹1. This equals applying them to the returns
+     rescaled to today's volatility (tested).
+   - *The rule:* at each rebalance, choose the history and the volatility setting (none or RiskMetrics) with
+     the lowest variance of realised out-of-sample returns over the previous 252 days. It is applied per
+     estimator, and over all estimators ("rule: everything").
+   - *Fixed in advance:* every grid value, the 21-day interval and the 252-day look-back. Nothing was tuned on
+     the evaluation data. The full run takes about 10 minutes, so no grid had to be reduced. For the S&P 500
+     the longest window is 504 days, because the data cover only five years.
+3. *Measures and inference:*
+   - annualised volatility, Sharpe ratio (excess over the Fama-French risk-free rate), turnover per rebalance
+     (against the drifted weights), and volatility and Sharpe ratio net of 10 and 25 basis points;
+   - for every comparison, the ratio of variances with a 95% moving-block bootstrap interval over days (blocks
+     of 21 days, 1000 resamples) and the Newey-West t-statistic;
+   - subperiods 1969–1989 (1976–1989 for the industries), 1990–2007 and 2008–2026, and the crises 2000–2002,
+     2008–2009 and 2020;
+   - the lever decomposition from two baselines, the sample covariance on 252 days and Ledoit-Wolf nonlinear
+     on 252 days, without volatility scaling. "Best" means lowest variance over the full period, chosen
+     **ex post**, so it is an upper bound. The rule is its ex-ante counterpart.
+4. *Robustness:* weekly rebalancing for the lever configurations (100 portfolios), and the 60-day half-life.
+5. *Do the paper's and BPT's formulas survive devolatilisation?* (`check`). Algebraically they hold with a in
+   place of 1, as long as a is fixed. In practice σ_t comes from the last days of the same window, and z is
+   standardised with estimated volatilities. We simulated GARCH(1,1) volatility per asset (0.06, 0.93) with the
+   correlations of the 100 portfolios, 100 samples per window, and compared the formulas with their oracles
+   under the true covariance of the next day.
+
+**What it showed — the formulas after devolatilisation:** they hold only approximately.
+- The paper's intensity α is 9–15% below its oracle (0.80 against 0.91 at n = 63; 0.95 against 1.11 at n = 252).
+  Without devolatilisation it is −7% to +1% off.
+- The resulting loss is 4–26% above the oracle α, against 2–4% without devolatilisation.
+- BPT's estimated variance at its chosen η is about half the true one (median ratio 0.49–0.60). Without
+  devolatilisation the ratio is 0.64–0.79.
+- The realised loss is still much lower with devolatilisation (BPT at n = 252: 0.33 against 1.53), so we keep
+  the devolatilised versions of both estimators and flag them. The lever conclusions below rest on the
+  covariance estimators, for which no such formula is involved.
+
+**What it showed — the levers** (variance reduction, %, with 95% bootstrap interval; FF100 = the 100 portfolios,
+IND49 = the industries; full period unless stated):
+
+| From the sample covariance, 252 days | FF100 | IND49 | S&P 500 |
+|---|---|---|---|
+| estimator only (best at 252 days) | 21 [19, 24], LW nonlinear | 6 [5, 8], LW linear | 61 [56, 71], BPT 2024 |
+| window only (best history) | 20 [17, 24], EW half-life 252 | 7 [5, 8], EW half-life 126 | 36 [33, 43], EW half-life 126 |
+| volatility only (RiskMetrics) | 12 [5, 21] | −6 [−10, −3] | 28 [23, 35] |
+| all three (ex post best) | 27 [23, 33], LW nonlinear, EW 63 | 10 [7, 12], LW linear, EW 126 | 61 [56, 71], BPT 2024, 252 days |
+| past-data rule (ex ante) | 24 [19, 31] | 7 [3, 10] | 58 [54, 69] |
+| **From Ledoit-Wolf nonlinear, 252 days** | | | |
+| estimator only (best at 252 days) | 0, already the best | 0 [0, 1], LW linear | 8 [6, 14], BPT 2024 |
+| window only | 7 [4, 12] | 4 [3, 5] | 5 [2, 11] |
+| volatility only (RiskMetrics) | 4 [−2, 12] | −6 [−9, −2] | 2 [−7, 13] |
+| volatility only (half-life 60) | 7 [2, 15] | 1 [−1, 3] | 2 [−2, 10] |
+| all three (ex post best) | 7 [4, 12] | 4 [3, 5] | 8 [6, 14], BPT 2024, 252 days |
+| past-data rule (ex ante) | 4 [−1, 9] | 1 [−2, 4] | 2 [−2, 12] |
+
+Annualised volatility on FF100:
+- 1/N: 17.4%;
+- the sample covariance on 252 days: 10.9%;
+- Ledoit-Wolf nonlinear on 252 days: 9.66%;
+- the past-data rule: 9.49%;
+- the ex-post best of the main grid: 9.31%.
+
+On IND49: 16.8%, 11.0%, 10.68%, 10.64% and 10.47%.
+
+- **The window curve** (`s6_window.png`):
+  - *Sample covariance on FF100* (p = 95): volatility is 13.4%, 14.5%, 10.9%, 10.0% and 9.9% for windows of 63
+    to 1008 days. The paper's estimator follows the same shape (12.5% to 9.9%).
+  - *BPT 2024 and both Ledoit-Wolf estimators* stay between 9.5% and 9.9% at every window.
+  - *Industries:* the same picture; the sample covariance at 63 days (c = 0.78) gives 19.7%, the shrinkage
+    estimators 10.5–11.5% everywhere.
+  - So most of the "window" gain from the textbook start is the cure for a weak estimator, not a property of
+    the data.
+- **Volatility scaling:**
+  - RiskMetrics helps the sample covariance on FF100 (12%), but not reliably in 1990–2007 (−1% [−8, 5]) or
+    2000–2002 (0% [−11, 15]).
+  - It hurts on IND49 (−6% overall). The point estimate is negative in every subperiod except 2020, and
+    significantly so in 1976–1989 and 1990–2007.
+  - It multiplies turnover by 1.5–2.3 on FF100 and 2.3–2.9 on IND49. Net of 25 basis points, Ledoit-Wolf
+    nonlinear's Sharpe ratio on FF100 falls from 0.74 to −0.03 with it.
+  - The 60-day half-life helps more and costs less (turnover ×1.0–1.4): 7% [2, 15] on top of Ledoit-Wolf
+    nonlinear on FF100, but 1% [−1, 3] on IND49.
+- **Subperiods and crises**, from the textbook start:
+  - On FF100 the estimator and window levers lower the variance in every subperiod (16–23%) and every crisis
+    (10–29%). Only in 2000–2002 do the intervals touch 0 (estimator 13% [0, 25], window 10% [−1, 20]).
+  - On IND49 the gains are smaller but present in every subperiod (estimator 5–8%, window 5–7%). In 2008–2009
+    the estimator gain is not significant (4% [−2, 13]).
+  - From Ledoit-Wolf nonlinear, none of the main levers is significant in any crisis on FF100. The one
+    exception is the robustness setting: the 60-day half-life gives 15% [7, 24] in 2000–2002, but −8% [−17, 1]
+    in 2020. On IND49 the exponentially weighted history adds 5–6% in 2000–2002 and 2008–2009.
+- **The rule:**
+  - It chooses Ledoit-Wolf nonlinear at 72% of rebalances on FF100 (45% on IND49), usually an exponentially
+    weighted or long history, and RiskMetrics scaling at 32% (11%).
+  - From the textbook start it is significant in every subperiod on FF100 (19–26%). On IND49 it gives 6–8%;
+    the 2008–2026 interval touches 0, and in the 2008–2009 crisis it is −3% [−22, 15].
+  - Against Ledoit-Wolf nonlinear on 252 days it never wins significantly in a subperiod; in 2008–2009 on IND49
+    it is 7% worse (not significant).
+- **Weekly rebalancing** lowers every configuration's volatility on FF100 by 0.6–0.8 points (Ledoit-Wolf
+  nonlinear, 252 days: 9.66% → 9.02%) and doubles yearly turnover. The lever ratios barely change (estimator:
+  0.786 → 0.801; window: 0.795 → 0.822).
+- **Costs:** the GMV portfolios of FF100 are long-short and trade a lot. Turnover per monthly rebalance is 1.3
+  for Ledoit-Wolf nonlinear and 3.1 for the sample covariance on 252 days. Net of 25 basis points, their Sharpe
+  ratios are 0.74 and 0.21; costs move the volatility little (9.66% → 9.77%).
+- **S&P 500 2013–2018** (p = 150, evaluation 9 November 2016 to 7 February 2018, 313 days):
+  - The same ranking, with larger numbers, because p = 150 is large against every window (c = 0.3–2.4).
+  - From the sample covariance on 252 days (volatility 11.4%), the estimator gives 61% (BPT 2024, 7.1%), the
+    history 36%, and RiskMetrics scaling 28%.
+  - From Ledoit-Wolf nonlinear (7.4%), BPT 2024 is 8% better [6, 14] and the best history 5% [2, 11].
+    Volatility scaling and the rule add nothing significant.
+  - 1/N gives 8.6%.
+  - This is one year and three months of a calm, rising market, with survivorship bias: the weakest evidence
+    of the three.
+
+**Where the results are weak or mixed:**
+- The "best" history and the "all three" configuration are chosen ex post, and the intervals do not account
+  for that. The rule is the honest version and gets about 90% of the best gain from the textbook start
+  (FF100: 24% against 27%).
+- The bootstrap intervals for 2020 are wide (one year, 12 blocks).
+- Volatility scaling helps on one data set and hurts on the other.
+- The S&P 500 sample is short, and it is a bull market with survivorship bias.
+- French portfolios are not directly investable. Costs are charged at the portfolio level, and there is no
+  short-sale constraint.
+
+![Study 6: volatility against the window, and the lever decomposition, three data sets](results/study6.png)
+
+![Study 6: the variance reduction from each lever, 100 portfolios](results/slides/s6_levers.png)
+![Study 6: volatility against the window](results/slides/s6_window.png)
+![Study 6: the levers in the crises](results/slides/s6_crises.png)
+
 ---
 
 ## What reproduces and what does not
@@ -340,17 +535,23 @@ short-sale constraint.
 | Shrinkage improves on simple strategies in practice | Not shown by the paper; equal weights do as well or better for c ≥ 0.9 (Study 3) |
 | *Our extension:* several targets (ridge base) | Does not survive: on S&P 500 with the same data it equals BPT 2024 (ratio 0.99–1.04, all 95% intervals contain 1); helps only in our market simulation or with 120 extra days, where Ledoit-Wolf nonlinear on the same days is as good or better (Study 5) |
 | *Our extension:* ridge base (BPT 2024) instead of S⁻¹/S⁺ | Survives: 9–42% lower variance than the paper's estimator at every c and p (t ≤ −3.8); beats Ledoit-Wolf nonlinear only for p = 150 at c ≤ 0.9, loses to it for p = 54 at c ≥ 1.5 (Study 5) |
+| *Study 6:* a better estimator is the lever that matters | Partly. From the sample covariance on one year, the estimator and the history matter about equally (variance −21% and −20% on the 100 portfolios, −6% and −7% on the industries), in every subperiod; volatility scaling matters less and is not robust (variance −12% on the portfolios, +6% on the industries). From Ledoit-Wolf nonlinear, the other levers add at most 4–7%, and nothing significant in crises (Study 6) |
+| *Study 6:* choose the window and volatility setting from past data | Safe but not better: from the textbook start it lowers the variance by 24% (the ex-post best: 27%), but does not beat Ledoit-Wolf nonlinear on a fixed year (4% [−1, 9]) (Study 6) |
 
 ## Next
 
-Study 5 settles that a second target chosen by the random-matrix estimate does not help on these data once all
-estimators see the same days, and that the ridge base (BPT 2024) is what improves on the paper. What is left:
+Study 5 settles that a second target chosen by the random-matrix estimate does not help once all estimators see
+the same days, and that the ridge base (BPT 2024) is what improves on the paper. Study 6 shows that on long,
+survivorship-free data a good shrinkage estimator is most of the answer: with it, the window and the volatility
+model matter little. What is left:
 (1) the optimism of the estimated loss at the selected η: a less noisy selection (smoothing the estimated curve,
-or a closed-form η) is the most promising change, since the oracle choice in the same family is 4–31% better
-in simulation; (2) a ridge base whose regularisation follows the eigenvalue structure, i.e. combining the
-paper's target shrinkage with nonlinear shrinkage, which wins for short windows (n < 40); (3) targets that are
-independent of the window by construction, such as the previous period's weights; (4) a no-short-sale
-constraint; (5) a sample without survivorship bias and outside the 2013–2018 bull market.
+or a closed-form η), since the oracle choice in the same family is 4–31% better in simulation;
+(2) a random-matrix theory for devolatilised data, where the vector a = D⁻¹1 comes from the same window: the
+formulas hold only approximately (α 9–15% too low, BPT's variance estimate about half the truth);
+(3) slow volatility scaling (half-life 60 days), the one volatility setting that helped Ledoit-Wolf nonlinear on
+the 100 portfolios (7% [2, 15]), needs a test on other data, since it adds nothing on the industries;
+(4) turnover: the GMV portfolios of the French data trade 130% or more a month, so a turnover penalty or a
+no-short-sale constraint, and individual stocks from CRSP, would make the costs realistic.
 
 ## Files
 
@@ -360,7 +561,10 @@ constraint; (5) a sample without survivorship bias and outside the 2013–2018 b
 | `fetch_sp500.py` | downloads the S&P 500 data and builds the returns in the paper's window |
 | `study0_theory.py` … `study3_sp500.py` | one study each, as above |
 | `study5_ridge_multitarget.py` | our extension and its fair comparison (validation, simulation, S&P 500 in two regimes) |
+| `fetch_french.py` | downloads the Kenneth French portfolios and the risk-free rate; `data/french_info.txt` records the download |
+| `study6_levers.py`, `study6_plot.py` | which lever matters: backtest of every estimator, history and volatility setting; tables and figures |
 | `tests/test_study5.py` | quick checks: reductions to the paper's estimator, nonlinear shrinkage, no look-ahead |
+| `tests/test_study6.py` | no look-ahead (EWMA volatility and the rule included), the devolatilised GMV, drifting weights |
 | `results/` | tables (`.csv`), overview figures (`.png`), raw simulation output (`.npz`) |
 | `results/slides/` | one chart per slide, for the presentation |
 | `fonts/` | Caladea and Caveat (SIL Open Font License), used by the charts |

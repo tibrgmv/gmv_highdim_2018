@@ -359,10 +359,16 @@ def lw_nonlinear(Y):
     shrinkage of large-dimensional covariance matrices", Annals of Statistics 48(5), 3043-3065, Section 4
     (kernel estimate of the sample spectral density and its Hilbert transform, Epanechnikov kernel, locally
     adaptive bandwidth h·λ_j with h = n^(-1/3)). Data are demeaned, so n - 1 observations."""
-    n0, p = Y.shape
     Yc = Y - Y.mean(axis=0)
-    n = n0 - 1
-    S = Yc.T @ Yc / n
+    n = Y.shape[0] - 1
+    return lw_nonlinear_cov(Yc.T @ Yc / n, n)
+
+
+def lw_nonlinear_cov(S, n):
+    """The same, from a covariance matrix S estimated with n effective observations (Study 6 uses it for
+    exponentially weighted S, with n = the effective sample size, rounded)."""
+    p = S.shape[0]
+    n = int(n)
     lam, U = np.linalg.eigh(S)
     k = min(p, n)
     lam = np.clip(lam[p - k:], 1e-300, None)                # the non-zero eigenvalues, ascending
@@ -402,3 +408,45 @@ def make_sigma_empirical(p, rng):
 def pd_read_close():
     import pandas as pd
     return pd.read_csv(os.path.join(DATA, "sp500_close.csv"), index_col=0, parse_dates=True)
+
+
+# ----------------------------------------------------------------------------
+# Study 6: exponentially weighted estimates and EWMA volatility
+# ----------------------------------------------------------------------------
+def ew_weights(L, halflife):
+    """Weights of the last L observations, oldest first, decaying with the given half-life; they sum to 1."""
+    w = 0.5 ** (np.arange(L)[::-1] / halflife)
+    return w / w.sum()
+
+
+def weighted_cov(Y, w):
+    """Σ_s w_s (y_s - m)(y_s - m)' with m = Σ_s w_s y_s, weights summing to 1."""
+    Yc = Y - w @ Y
+    return Yc.T @ (w[:, None] * Yc)
+
+
+def ledoit_wolf_weighted(Y, w):
+    """Ledoit-Wolf (2004) linear shrinkage with observation weights w (summing to 1). With w = 1/n it equals
+    ledoit_wolf(Y): the dispersion term b² = Σ_s w_s² ||y_s y_s' - S||² / p reduces to the paper's (1/n²) Σ_s."""
+    p = Y.shape[1]
+    Yc = Y - w @ Y
+    S = Yc.T @ (w[:, None] * Yc)
+    mu = np.trace(S) / p
+    d2 = ((S - mu * np.eye(p)) ** 2).sum() / p
+    q = (Yc ** 2).sum(axis=1)                                 # ||y_s||²
+    ySy = np.einsum("sp,pq,sq->s", Yc, S, Yc)
+    b2 = (w ** 2 * (q ** 2 - 2 * ySy + (S ** 2).sum())).sum() / p
+    k = min(max(b2, 0), d2) / d2
+    return k * mu * np.eye(p) + (1 - k) * S
+
+
+def ewma_vol(R, lam, init=63):
+    """Per-asset volatility forecasts from data before each day: σ²[t] = λ σ²[t-1] + (1-λ) r[t-1]² (RiskMetrics,
+    returns not demeaned), started at σ²[init] = the mean of r² over rows 0, ..., init-1. Returns T+1 rows (the
+    last one is the forecast for the day after the data); rows before `init` are NaN."""
+    from scipy.signal import lfilter
+    T, p = R.shape
+    s2 = np.full((T + 1, p), np.nan)
+    s2[init] = (R[:init] ** 2).mean(axis=0)
+    s2[init + 1:] = lfilter([1.0], [1.0, -lam], (1 - lam) * R[init:] ** 2, axis=0, zi=lam * s2[init][None, :])[0]
+    return np.sqrt(s2)

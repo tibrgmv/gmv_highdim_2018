@@ -12,3 +12,12 @@ results/study2_log.txt
 # Raw daily returns of Study 5 (rebuilt by study5_ridge_multitarget.py sp500)
 results/study5_sp500_p*.npz
 .DS_Store
+
+# Study 6: raw French zips and the derived daily returns (rebuilt by fetch_french.py, about 17 MB);
+# data/french_info.txt records the download and stays in the repository
+data/french/
+data/ff100_daily.csv
+data/ind49_daily.csv
+data/ff_rf_daily.csv
+# Raw daily returns of every Study 6 configuration (rebuilt by study6_levers.py run)
+results/study6_*.npz

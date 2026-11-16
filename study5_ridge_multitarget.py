@@ -376,7 +376,7 @@ def plot():
     a.set_xlabel(r"ridge $\eta$ / average eigenvalue"); a.set_ylabel("relative loss, ridge GMV portfolio")
     top = g.estimate.quantile(0.9).max()
     note(a, x[1], top * 0.92, "neutral design (S&P 500 covariance), c = 2:\nthe estimate from the data (red) tracks the truth (black)")
-    note(a, x[-12], top * 0.55, "band: 80% of samples;\nat the chosen η the estimate is optimistic", size=20)
+    note(a, 10 ** 0.2, 0.22, "band: 80% of samples;\n" r"at the chosen $\eta$ the estimate is optimistic", size=20)
     save(fig, os.path.join(RESULTS, "slides", "s5_estimate_tracks_truth.png")); plt.close(fig)
 
     # 2. simulation ------------------------------------------------------------------------------------
