@@ -1,22 +1,21 @@
-"""
-Quick checks of the Study 5 code (about 20 seconds). Run from the repository root:
-    python tests/test_study5.py          (or: python -m pytest tests)
-"""
+"""Study 5: reductions to the paper's estimator, nonlinear shrinkage, no look-ahead. python tests/test_study5.py"""
 import os
 import sys
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from common import (make_sigma, simulate, sample_cov, gmv, pinv, bona_fide, multi_target, ridge_multi_target, lw_nonlinear,
-                    relative_loss, gmv_variance)
-import study5_ridge_multitarget as s5
+from gmv.backtest import Past
+from gmv.designs import make_sigma, simulate
+from gmv.estimators import sample_cov, gmv, pinv, bona_fide, multi_target, ridge_multi_target, lw_nonlinear
+from gmv.theory import relative_loss, gmv_variance
+import studies.study5_ridge as s5
 
 
 def test_ridge_one_target_small_eta_is_bona_fide():
     """With one target, η -> 0 and the paper's convention (n observations), ridge_multi_target is (2.26)."""
     rng = np.random.default_rng(1)
     _, root, _ = make_sigma(60, "bounded", rng)
-    for n in (120, 80):                                      # c = 0.5, 0.75
+    for n in (120, 80):
         S = sample_cov(simulate(root, n, rng)[0])
         b = np.full(60, 1 / 60)
         w_r = ridge_multi_target(S, n, [b], etas=np.array([1e-9]), demeaned=False)[0]
@@ -27,7 +26,7 @@ def test_ridge_one_target_small_eta_is_bona_fide():
 def test_multi_target_one_target_is_bona_fide():
     rng = np.random.default_rng(2)
     _, root, _ = make_sigma(60, "bounded", rng)
-    for n in (120, 30):                                      # c = 0.5 and c = 2
+    for n in (120, 30):
         S = sample_cov(simulate(root, n, rng)[0])
         b = rng.dirichlet(np.ones(60))
         assert np.abs(multi_target(S, n, [b]) - bona_fide(S, n, b)[0]).max() < 1e-12
@@ -53,7 +52,7 @@ def test_backtest_never_reads_day_t_or_later():
     """Weights for day t are unchanged when every row from t on is replaced by NaN; reading too far back fails."""
     rng = np.random.default_rng(4)
     R = rng.standard_normal((400, 30)) * 0.01
-    for n in (60, 20):                                       # c = 0.5 and c = 1.5
+    for n in (60, 20):
         t = n + s5.PRIOR + 37
         W, _ = s5.weights_at(R, t, n)
         R2 = R.copy()
@@ -61,13 +60,13 @@ def test_backtest_never_reads_day_t_or_later():
         W2, _ = s5.weights_at(R2, t, n)
         assert np.all(np.isfinite(W2)) and np.array_equal(W, W2)
     try:
-        s5.Past(R, 50, 30).last(31)
+        Past(R, 50, 30).last(31)
     except AssertionError:
         pass
     else:
         raise AssertionError("a read beyond the allowed window was not caught")
     try:
-        s5.weights_at(R, s5.PRIOR, 30)                       # not enough history before t
+        s5.weights_at(R, s5.PRIOR, 30)
     except AssertionError:
         pass
     else:

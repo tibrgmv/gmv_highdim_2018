@@ -1,23 +1,16 @@
 __pycache__/
-
-# Downloaded and derived data: rebuilt by fetch_sp500.py (about 30 MB).
-# The returns in the paper's window are small and stay in the repository.
-data/all_stocks_5yr.csv
-data/sp500_close.csv
-
-# Raw backtest output of Study 3 (rebuilt by study3_sp500.py)
-results/study3_all.csv
-results/study2_log.txt
-
-# Raw daily returns of Study 5 (rebuilt by study5_ridge_multitarget.py sp500)
-results/study5_sp500_p*.npz
 .DS_Store
 
-# Study 6: raw French zips and the derived daily returns (rebuilt by fetch_french.py, about 17 MB);
-# data/french_info.txt records the download and stays in the repository
+# downloaded data: python -m gmv.data
+data/all_stocks_5yr.csv
+data/sp500_close.csv
 data/french/
 data/ff100_daily.csv
 data/ind49_daily.csv
 data/ff_rf_daily.csv
-# Raw daily returns of every Study 6 configuration (rebuilt by study6_levers.py run)
-results/study6_*.npz
+
+# raw backtest output, rebuilt by the study scripts
+results/study4/backtest.csv
+results/study5/*.npz
+results/study6/*.npz
+results/study7/*.npz
